@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">KursovicV2</string>
+    <string name="NameMusic">Название песни</string>
+    <string name="Author">Автор</string>
+    <string name="NameFile">Название файла</string>
+    <string name="Playlist">Плейлист</string>
+</resources>
