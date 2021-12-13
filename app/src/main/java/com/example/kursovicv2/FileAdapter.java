@@ -2,7 +2,11 @@ package com.example.kursovicv2;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.media.MediaMetadataRetriever;
 import android.net.Uri;
+import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,10 +17,12 @@ import android.widget.Toast;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.io.File;
+import java.util.ArrayList;
 
 public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder>{
     Context context;
     File[] filesAndFolders;
+    ArrayList<Audio> AudioList = new ArrayList<>();
     public FileAdapter(Context context, File[] filesAndFolders){
         this.context = context;
         this.filesAndFolders = filesAndFolders;
@@ -48,16 +54,15 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder>{
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     context.startActivity(intent);
                 }else{
-                    try {
-                        Intent intent = new Intent();
-                        intent.setAction(Intent.ACTION_VIEW);
-                        String type = "image/*";
-                        intent.setDataAndType(Uri.parse(selectedFile.getAbsolutePath()),type);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        context.startActivity(intent);
-                    }catch (Exception e){
-                        Toast.makeText(context.getApplicationContext(),"Cannot open file", Toast.LENGTH_SHORT);
-                    }
+                    Uri uri = Uri.parse(selectedFile.getAbsolutePath());
+                    Log.e("File path", " " + uri);
+                    MediaMetadataRetriever metadataRetriever = new MediaMetadataRetriever();
+                    metadataRetriever.setDataSource(selectedFile.getAbsolutePath());
+                    String artist = metadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST);
+                    String title = metadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);
+                    Audio audio = new Audio(selectedFile.getAbsolutePath(), title, artist);
+                    AudioList.add(audio);
+                    Log.e("Artist", " " + artist + " - " + title);
                 }
             }
         });
@@ -79,4 +84,5 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder>{
 
         }
     }
+
 }
