@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.io.File;
+import java.util.ArrayList;
 
 public class FileSystem extends AppCompatActivity {
     ImageButton Playlist;
@@ -42,7 +43,7 @@ public class FileSystem extends AppCompatActivity {
         File root = new File(path);
         File[] filesAndFolders = root.listFiles();
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(new FileAdapter(getApplicationContext(),filesAndFolders));
+        recyclerView.setAdapter(new FileAdapter(this,filesAndFolders));
     }
 }
 
