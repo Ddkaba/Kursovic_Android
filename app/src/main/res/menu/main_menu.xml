@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_player"
+        android:icon="@drawable/play"
+        android:title="Плеер" />
+
+    <item
+        android:id="@+id/navigation_playlist"
+        android:icon="@drawable/playlist"
+        android:title="@string/Playlist" />
+
+    <item
+        android:id="@+id/navigation_chosen"
+        android:icon="@drawable/favorite"
+        android:title="@string/Chosen" />
+
+    <item
+        android:id="@+id/navigation_filesystem"
+        android:icon="@drawable/folder"
+        android:title="@string/FileSystem" />
+
+</menu>
