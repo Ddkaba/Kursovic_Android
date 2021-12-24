@@ -1,6 +1,11 @@
 package com.example.kursovicv21;
 
-public class Audio {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import java.io.Serializable;
+
+public class Audio implements Parcelable, Serializable {
     private String path;
     private String title;
     private String artist;
@@ -11,28 +16,41 @@ public class Audio {
         this.artist = artist;
     }
 
-    public void setPath(String path) {
-        this.path = path;
+    public void setPath(String path) { this.path = path; }
+    public void setTitle(String title) { this.title = title; }
+    public void setArtist(String artist) { this.artist = artist; }
+    public String getPath() { return path; }
+    public String getTitle() { return title; }
+    public String getArtist() { return artist; }
+
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    private Audio (Parcel in){
+        setPath(in.readString());
+        setTitle(in.readString());
+        setArtist(in.readString());
     }
 
-    public void setArtist(String artist) {
-        this.artist = artist;
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(getPath());
+        dest.writeString(getTitle());
+        dest.writeString(getArtist());
     }
 
-    public String getPath() {
-        return path;
-    }
+    public static final Parcelable.Creator<Audio> CREATOR = new Creator<Audio>() {
+        @Override
+        public Audio createFromParcel(Parcel source) {
+            return new Audio(source);
+        }
 
-    public String getTitle() {
-        return title;
-    }
-
-    public String getArtist() {
-        return artist;
-    }
+        @Override
+        public Audio[] newArray(int size) {
+            return new Audio[size];
+        }
+    };
 }
 

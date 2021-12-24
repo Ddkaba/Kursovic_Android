@@ -2,6 +2,7 @@ package com.example.kursovicv21;
 
 import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -17,13 +18,15 @@ import androidx.fragment.app.Fragment;
 
 import com.google.android.material.slider.Slider;
 
+import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 public class Player_Fragment extends Fragment {
-    MediaPlayer player;
+    static MediaPlayer player;
     ImageButton favourite, PlayStop;
-    TextView Max, Min, NameSong;
+    TextView Max, Min, NameSong, Author;
     Slider Slider;
+    String path, name, author;
     float TotalTime;
 
     public Player_Fragment(){}
@@ -41,6 +44,33 @@ public class Player_Fragment extends Fragment {
         Max = view.findViewById(R.id.MaxValue);
         Min = view.findViewById(R.id.text);
         NameSong = view.findViewById(R.id.NameSong);
+        Author = view.findViewById(R.id.AuthorName);
+        try{
+            ArrayList<Audio> AudioList = getArguments().getParcelableArrayList("Audio");
+            path = getArguments().getString("path");
+            name = getArguments().getString("title");
+            author = getArguments().getString("author");
+            NameSong.setText(name);
+            Author.setText(author);
+            Uri uri = Uri.parse(path);
+            player = MediaPlayer.create(getContext(),uri);
+            TotalTime = player.getDuration();
+            player.setLooping(true);
+            player.seekTo(0);
+            Slider.setValueTo(TotalTime);
+            float speed = 1.0f;
+            player.setPlaybackParams(player.getPlaybackParams().setSpeed(speed));
+            player.pause();
+            Max.setText(String.format("%d:%d", TimeUnit.MILLISECONDS.toMinutes((long) TotalTime), TimeUnit.MILLISECONDS.toSeconds((long) TotalTime) -
+                    TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes((long) TotalTime))));
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        if(player != null) //Изменить
+        {
+            player.stop();
+            player.release();
+        }
         favourite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -53,25 +83,13 @@ public class Player_Fragment extends Fragment {
                 }
             }
         });
-        player = MediaPlayer.create(getActivity(), R.raw.odium);
-        TotalTime = player.getDuration();
-        player.setLooping(true);
-        player.seekTo(0);
-        Slider.setValueTo(TotalTime);
-        float speed = 1.0f;
-        player.setPlaybackParams(player.getPlaybackParams().setSpeed(speed));
-        player.pause();
-        Max.setText(String.format("%d:%d", TimeUnit.MILLISECONDS.toMinutes((long) TotalTime), TimeUnit.MILLISECONDS.toSeconds((long) TotalTime) -
-                TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes((long) TotalTime))));
+
         Slider.addOnSliderTouchListener(new Slider.OnSliderTouchListener() {
             @Override
-            public void onStartTrackingTouch(@NonNull com.google.android.material.slider.Slider slider) {
-            }
+            public void onStartTrackingTouch(@NonNull com.google.android.material.slider.Slider slider) { }
 
             @Override
-            public void onStopTrackingTouch(@NonNull com.google.android.material.slider.Slider slider) {
-
-            }
+            public void onStopTrackingTouch(@NonNull com.google.android.material.slider.Slider slider) { }
         });
 
         Slider.addOnChangeListener(new Slider.OnChangeListener() {
@@ -110,6 +128,7 @@ public class Player_Fragment extends Fragment {
                 }
             }
         }).start();
+
         return view;
     }
 

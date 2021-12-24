@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -21,21 +22,26 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+
 import java.io.File;
 import java.util.ArrayList;
 
 public class FileSystem_Fragment extends Fragment implements OnFileSelectedListener{
-    public FileSystem_Fragment() {}
-    public static FileSystem_Fragment newInstance(){ return new FileSystem_Fragment(); }
-    ArrayList<Audio> AudioList = new ArrayList<>();
+    ImageView Add;
+    ArrayList<String> Path = new ArrayList<>();
     String data;
     String path;
     File root;
+
+    public FileSystem_Fragment() {}
+    public static FileSystem_Fragment newInstance(){ return new FileSystem_Fragment(); }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.filesystem_fragment, container, false);
+        Add = view.findViewById(R.id.check);
         if(checkPermission()){
             path = Environment.getExternalStorageDirectory().getPath();
         }else{
@@ -53,6 +59,21 @@ public class FileSystem_Fragment extends Fragment implements OnFileSelectedListe
         RecyclerView recyclerView = view.findViewById(R.id.recyclerViewFile);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(new FileAdapter(getContext(),filesAndFolders,this));
+
+        Add.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(Path.size() > 0) {
+                    Bundle bundle = new Bundle();
+                    bundle.putStringArrayList("AudioPath",Path);
+                    Playlist_Fragment fragment = new Playlist_Fragment();
+                    fragment.setArguments(bundle);
+                    getFragmentManager().beginTransaction().replace(R.id.fl_content, fragment).addToBackStack(null).commit(); }
+                else {
+                    Toast toast = Toast.makeText(getContext(), "Необходимо добавить песню", Toast.LENGTH_SHORT);
+                    toast.show(); }
+            }
+        });
         return view;
     }
 
@@ -82,8 +103,7 @@ public class FileSystem_Fragment extends Fragment implements OnFileSelectedListe
             getFragmentManager().beginTransaction().replace(R.id.fl_content, fragment).addToBackStack(null).commit();
         }
         else{
-            if(file.getName().toLowerCase().endsWith(".mp3"))
-            {
+            if(file.getName().toLowerCase().endsWith(".mp3")) {
                 AlertDialog.Builder  builder = new AlertDialog.Builder(getActivity());
                 builder.setTitle("Подтверждение");
                 builder.setMessage("Вы хотите добавить эту песню в плейлист?");
@@ -95,23 +115,13 @@ public class FileSystem_Fragment extends Fragment implements OnFileSelectedListe
                 builder.setNegativeButton("Да", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        AddMusic(file.getAbsoluteFile());
+
+                        Path.add(file.getAbsolutePath());
                     }
                 });
                 AlertDialog alertDialog = builder.create();
                 alertDialog.show();
             }
         }
-    }
-
-    public void AddMusic(File selectedFile){
-        MediaMetadataRetriever metadataRetriever = new MediaMetadataRetriever();
-        metadataRetriever.setDataSource(selectedFile.getAbsolutePath());
-        String artist = metadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST);
-        String title = metadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);
-        Log.e("File path", " " + selectedFile.getAbsolutePath());
-        Log.e("Artist", " " + artist + " - " + title);
-        Audio audio = new Audio(selectedFile.getAbsolutePath(), title, artist);
-        AudioList.add(audio);
     }
 }

@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.media.MediaMetadataRetriever;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -28,6 +29,18 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder>{
         this.listener = listener;
     }
 
+    public class ViewHolder extends RecyclerView.ViewHolder{
+        TextView textView;
+        ImageView imageView;
+
+        public ViewHolder(View itemView){
+            super(itemView);
+            textView = itemView.findViewById(R.id.Name_file);
+            imageView = itemView.findViewById(R.id.imageButton_folder);
+
+        }
+    }
+
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.recycler_item_file, parent, false);
@@ -43,10 +56,11 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder>{
         } else {
             holder.imageView.setImageResource(R.drawable.file);
         }
-
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                holder.itemView.setBackgroundColor(Color.parseColor("#efefef"));
+                holder.imageView.setBackgroundColor(Color.parseColor("#efefef"));
                 listener.onFileClicked(selectedFile);
             }
         });
@@ -55,18 +69,6 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder>{
     @Override
     public int getItemCount() {
         return filesAndFolders.length;
-    }
-
-    public class ViewHolder extends RecyclerView.ViewHolder{
-        TextView textView;
-        ImageView imageView;
-
-        public ViewHolder(View itemView){
-            super(itemView);
-            textView = itemView.findViewById(R.id.Name_file);
-            imageView = itemView.findViewById(R.id.imageButton_folder);
-
-        }
     }
 
 }
