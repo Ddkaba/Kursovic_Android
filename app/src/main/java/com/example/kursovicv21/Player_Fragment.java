@@ -1,16 +1,19 @@
 package com.example.kursovicv21;
 
 import android.graphics.drawable.Drawable;
+import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,15 +21,23 @@ import androidx.fragment.app.Fragment;
 
 import com.google.android.material.slider.Slider;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 public class Player_Fragment extends Fragment {
     static MediaPlayer player;
-    ImageButton favourite, PlayStop;
+    ArrayList<Audio> AudioList;
+    ArrayList<Audio> Favorite = new ArrayList<>();
+    Integer position;
+    ImageButton favourite, PlayStop, Next, Back;
     TextView Max, Min, NameSong, Author;
     Slider Slider;
-    String path, name, author;
+    String name, author;
+    Thread updateSlider;
     float TotalTime;
 
     public Player_Fragment(){}
@@ -45,51 +56,50 @@ public class Player_Fragment extends Fragment {
         Min = view.findViewById(R.id.text);
         NameSong = view.findViewById(R.id.NameSong);
         Author = view.findViewById(R.id.AuthorName);
+        Back = view.findViewById(R.id.BackButton);
+        Next = view.findViewById(R.id.NextButton);
+
         try{
-            ArrayList<Audio> AudioList = getArguments().getParcelableArrayList("Audio");
-            path = getArguments().getString("path");
+            AudioList = getArguments().getParcelableArrayList("Audio");
             name = getArguments().getString("title");
             author = getArguments().getString("author");
-            NameSong.setText(name);
-            Author.setText(author);
-            Uri uri = Uri.parse(path);
-            player = MediaPlayer.create(getContext(),uri);
-            TotalTime = player.getDuration();
-            player.setLooping(true);
-            player.seekTo(0);
-            Slider.setValueTo(TotalTime);
-            float speed = 1.0f;
-            player.setPlaybackParams(player.getPlaybackParams().setSpeed(speed));
-            player.pause();
-            Max.setText(String.format("%d:%d", TimeUnit.MILLISECONDS.toMinutes((long) TotalTime), TimeUnit.MILLISECONDS.toSeconds((long) TotalTime) -
-                    TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes((long) TotalTime))));
+            position = getArguments().getInt("pos");
+            if(player != null)
+            {
+                player.stop();
+                player.release();
+            }
+            Switching(position);
         }catch (Exception e){
             e.printStackTrace();
         }
-        if(player != null) //Изменить
-        {
-            player.stop();
-            player.release();
-        }
-        favourite.setOnClickListener(new View.OnClickListener() {
+
+        updateSlider = new Thread(){
             @Override
-            public void onClick(View v) {
-                Drawable drawable = favourite.getDrawable();
-                if(drawable.getConstantState().equals(getResources().getDrawable(R.drawable.not_favorite).getConstantState())) {
-                    favourite.setImageResource(R.drawable.favorite);
-                }
-                else{
-                    favourite.setImageResource(R.drawable.not_favorite);
+            public void run(){
+                int currentposition = 0;
+                while(currentposition<TotalTime){
+                    try{
+                        sleep(1000);
+                        currentposition = player.getCurrentPosition();
+                        Slider.setValue(currentposition);
+                    }
+                    catch (InterruptedException | IllegalStateException e){
+                        e.printStackTrace();
+                    }
                 }
             }
-        });
+        };
+        Slider.setValueTo(TotalTime);
+        updateSlider.start();
 
         Slider.addOnSliderTouchListener(new Slider.OnSliderTouchListener() {
             @Override
             public void onStartTrackingTouch(@NonNull com.google.android.material.slider.Slider slider) { }
 
             @Override
-            public void onStopTrackingTouch(@NonNull com.google.android.material.slider.Slider slider) { }
+            public void onStopTrackingTouch(@NonNull com.google.android.material.slider.Slider slider) {
+            }
         });
 
         Slider.addOnChangeListener(new Slider.OnChangeListener() {
@@ -101,46 +111,129 @@ public class Player_Fragment extends Fragment {
                 }
             }
         });
+
+        final Handler handler = new Handler();
+        final int delay = 1000;
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                String currentTime = createTimeLabel(player.getCurrentPosition());
+                Min.setText(currentTime);
+                handler.postDelayed(this, delay);
+            }
+        }, delay);
+
         PlayStop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!player.isPlaying()) {
-                    player.start();
-                    PlayStop.setImageResource(R.drawable.pause);
-                }
-                else {
+                if(player.isPlaying()) {
                     player.pause();
                     PlayStop.setImageResource(R.drawable.play);
+                }
+                else {
+                    player.start();
+                    PlayStop.setImageResource(R.drawable.pause);
                 }
             }
         });
 
-        new Thread(new Runnable() {
+        Back.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void run() {
-                while (player!=null){
+            public void onClick(View v) {
+                player.stop();
+                player.release();
+                position = ((position-1)<0)?(AudioList.size()-1):(position-1);
+                Switching(position);
+            }
+        });
+
+        Next.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                player.stop();
+                player.release();
+                position = ((position+1)%AudioList.size());
+                Switching(position);
+            }
+        });
+
+        favourite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Drawable drawable = favourite.getDrawable();
+                if(drawable.getConstantState().equals(getResources().getDrawable(R.drawable.not_favorite).getConstantState())) {
+                    favourite.setImageResource(R.drawable.favorite);
+                    AddMusicFavorite();
                     try {
-                        Message msg = new Message();
-                        msg.what = player.getCurrentPosition();
-                        handler.sendMessage(msg);
-                        Thread.sleep(1000);
-                    } catch (InterruptedException e) {}
+                        FileOutputStream fos = new FileOutputStream(requireContext().getFilesDir().getPath() + "/Favorite.text");
+                        ObjectOutputStream oos = new ObjectOutputStream(fos);
+                        oos.writeObject(Favorite);
+                        oos.close();
+                        fos.close();
+                    } catch(Exception ex) {
+                        ex.printStackTrace();
+                    }
+                }
+                else{
+                    favourite.setImageResource(R.drawable.not_favorite);
+                    int Fposition = 0;
+                    for(Audio audio : Favorite){
+                        if (audio.getPath().equals(AudioList.get(position).getPath())) break;
+                        Fposition = Fposition + 1;
+                    }
+                    Favorite.remove(Fposition);
+                    try {
+                        FileOutputStream fos = new FileOutputStream(requireContext().getFilesDir().getPath() + "/Favorite.text");
+                        ObjectOutputStream oos = new ObjectOutputStream(fos);
+                        oos.writeObject(Favorite);
+                        oos.close();
+                        fos.close();
+                    } catch(Exception ex) {
+                        ex.printStackTrace();
+                    }
                 }
             }
-        }).start();
+        });
+
+        player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer player) {
+                Next.performClick();
+            }
+        });
 
         return view;
     }
 
-    private Handler handler = new Handler() {
-        @Override
-        public void handleMessage(Message msg){
-            int current = msg.what;
-            Slider.setValue(current);
-            String elapsedTime = createTimeLabel(current);
-            Min.setText(elapsedTime);
+    public void Switching(int pos){
+        Uri uri = Uri.parse(AudioList.get(pos).getPath());
+        player = MediaPlayer.create(getContext(),uri);
+        NameSong.setText(AudioList.get(pos).getTitle());
+        Author.setText(AudioList.get(pos).getArtist());
+        TotalTime = player.getDuration();
+        player.setLooping(true);
+        player.seekTo(0);
+        Slider.setValueTo(TotalTime);
+        float speed = 1.0f;
+        player.setPlaybackParams(player.getPlaybackParams().setSpeed(speed));
+        Max.setText(String.format("%d:%d", TimeUnit.MILLISECONDS.toMinutes((long) TotalTime), TimeUnit.MILLISECONDS.toSeconds((long) TotalTime) -
+                TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes((long) TotalTime))));
+        PlayStop.setImageResource(R.drawable.pause);
+        try {
+            FileInputStream fis = new FileInputStream(requireContext().getFilesDir().getPath() + "/Favorite.text");
+            ObjectInputStream ois = new ObjectInputStream(fis);
+            Favorite = (ArrayList<Audio>) ois.readObject();
+            for(Audio audio : Favorite){
+                if(audio.getPath().equals(AudioList.get(position).getPath())) {favourite.setImageResource(R.drawable.favorite); break; }
+                else  favourite.setImageResource(R.drawable.not_favorite);
+            }
+            ois.close();
+            fis.close();
+        } catch(Exception ex) { ex.printStackTrace();
+            Log.e("Error"," ");
         }
-    };
+        player.start();
+    }
 
     public String createTimeLabel(int time){
         String timeLabel = "";
@@ -151,4 +244,14 @@ public class Player_Fragment extends Fragment {
         timeLabel += sec;
         return  timeLabel;
     }
+
+    private ArrayList<Audio> AddMusicFavorite(){
+        String path = AudioList.get(position).getPath();
+        String title = AudioList.get(position).getTitle();
+        String artist = AudioList.get(position).getArtist();
+        Audio audio = new Audio(path, title, artist);
+        Favorite.add(audio);
+        return Favorite;
+    }
+
 }

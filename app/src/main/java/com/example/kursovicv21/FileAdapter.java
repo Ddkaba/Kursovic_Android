@@ -70,5 +70,4 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder>{
     public int getItemCount() {
         return filesAndFolders.length;
     }
-
 }

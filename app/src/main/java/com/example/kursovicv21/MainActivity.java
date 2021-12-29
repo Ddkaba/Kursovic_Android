@@ -29,9 +29,6 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.navigation_chosen:
                     loadFragment(Choose_Fragment.newInstance());
                     return true;
-                case R.id.navigation_player:
-                    loadFragment(Player_Fragment.newInstance());
-                    return true;
             }
             return false;
         }
@@ -51,6 +48,6 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().hide();
         BottomNavigationView navigation = findViewById(R.id.navigation);
         navigation.setOnItemSelectedListener(Navigation);
-        getSupportFragmentManager().beginTransaction().replace(R.id.fl_content, new Player_Fragment()).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.fl_content, new Playlist_Fragment()).commit();
     }
 }

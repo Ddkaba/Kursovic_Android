@@ -25,11 +25,16 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
 public class FileSystem_Fragment extends Fragment implements OnFileSelectedListener{
     ImageView Add;
     ArrayList<String> Path = new ArrayList<>();
+    ArrayList<Audio> AudioList = new ArrayList<>();
     String data;
     String path;
     File root;
@@ -64,11 +69,31 @@ public class FileSystem_Fragment extends Fragment implements OnFileSelectedListe
             @Override
             public void onClick(View v) {
                 if(Path.size() > 0) {
-                    Bundle bundle = new Bundle();
-                    bundle.putStringArrayList("AudioPath",Path);
-                    Playlist_Fragment fragment = new Playlist_Fragment();
-                    fragment.setArguments(bundle);
-                    getFragmentManager().beginTransaction().replace(R.id.fl_content, fragment).addToBackStack(null).commit(); }
+                    try {
+                        FileInputStream fis = new FileInputStream(requireContext().getFilesDir().getPath() + "/Audio.text");
+                        ObjectInputStream ois = new ObjectInputStream(fis);
+                        AudioList = (ArrayList<Audio>) ois.readObject();
+                        ois.close();
+                        fis.close();
+                    } catch(Exception ex) {
+                        ex.printStackTrace();
+                        Log.e("Error"," ");
+                    }
+                    for(int i = 0;i<Path.size();i++){
+                        AddMusic(Path.get(i));
+                    }
+                    try {
+                        FileOutputStream fos = new FileOutputStream(requireContext().getFilesDir().getPath() + "/Audio.text");
+                        ObjectOutputStream oos = new ObjectOutputStream(fos);
+                        oos.writeObject(AudioList);
+                        oos.close();
+                        fos.close();
+                        Toast toast = Toast.makeText(getContext(), "Песни добавлены в плейлист", Toast.LENGTH_SHORT);
+                        toast.show();
+                    } catch(Exception ex) {
+                        ex.printStackTrace();
+                    }
+                }
                 else {
                     Toast toast = Toast.makeText(getContext(), "Необходимо добавить песню", Toast.LENGTH_SHORT);
                     toast.show(); }
@@ -109,19 +134,24 @@ public class FileSystem_Fragment extends Fragment implements OnFileSelectedListe
                 builder.setMessage("Вы хотите добавить эту песню в плейлист?");
                 builder.setPositiveButton("Нет", new DialogInterface.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                    }
+                    public void onClick(DialogInterface dialog, int which) { }
                 });
                 builder.setNegativeButton("Да", new DialogInterface.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
-
-                        Path.add(file.getAbsolutePath());
-                    }
+                    public void onClick(DialogInterface dialog, int which) { Path.add(file.getAbsolutePath()); }
                 });
                 AlertDialog alertDialog = builder.create();
                 alertDialog.show();
             }
         }
+    }
+    private ArrayList<Audio> AddMusic(String path){
+        MediaMetadataRetriever metadataRetriever = new MediaMetadataRetriever();
+        metadataRetriever.setDataSource(path);
+        String artist = metadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST);
+        String title = metadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);
+        Audio audio = new Audio(path, title, artist);
+        AudioList.add(audio);
+        return AudioList;
     }
 }

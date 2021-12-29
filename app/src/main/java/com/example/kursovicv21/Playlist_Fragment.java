@@ -1,6 +1,8 @@
 package com.example.kursovicv21;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.media.MediaMetadataRetriever;
 import android.os.Bundle;
 import android.util.Log;
@@ -8,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -27,8 +30,6 @@ import java.util.ArrayList;
 
 public class Playlist_Fragment extends Fragment implements OnAudioSelectedListener{
     ArrayList<Audio> AudioList = new ArrayList<>();
-    ArrayList<String> Path = new ArrayList<>();
-    private final static String FILE_NAME = "content.txt";
 
     public Playlist_Fragment(){}
     public static Playlist_Fragment newInstance(){ return new Playlist_Fragment(); }
@@ -39,52 +40,21 @@ public class Playlist_Fragment extends Fragment implements OnAudioSelectedListen
         View view = inflater.inflate(R.layout.playlist_fragment, container, false);
         TextView Score = view.findViewById(R.id.Score);
         RecyclerView recyclerView = view.findViewById(R.id.recyclerView);
-        try{
-            Path = getArguments().getStringArrayList("AudioPath");
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        if(!Path.isEmpty()){
-            for(int i = 0;i<Path.size();i++){
-                AddMusic(Path.get(i));
-            }
-            try {
-                FileOutputStream fos = new FileOutputStream(requireContext().getFilesDir().getPath() + "/file.text");
-                ObjectOutputStream oos = new ObjectOutputStream(fos);
-                oos.writeObject(AudioList);
-                oos.close();
-                if(fos!=null)
-                    fos.close();
-            } catch(Exception ex) {
-                ex.printStackTrace();
-            }
-
-            try {
-                FileInputStream fis = new FileInputStream(requireContext().getFilesDir().getPath() + "/file.text");
-                ObjectInputStream ois = new ObjectInputStream(fis);
-                ArrayList<Audio> clubs = (ArrayList<Audio>) ois.readObject();
-                ois.close();
-                if(fis!=null)
-                    fis.close();
-            } catch(Exception ex) {
-                ex.printStackTrace();
-            }
-
+        try {
+            FileInputStream fis = new FileInputStream(requireContext().getFilesDir().getPath() + "/Audio.text");
+            ObjectInputStream ois = new ObjectInputStream(fis);
+            AudioList = (ArrayList<Audio>) ois.readObject();
+            ois.close();
+            if(fis!=null)
+                fis.close();
+        } catch(Exception ex) { ex.printStackTrace(); }
+        if(!AudioList.isEmpty())
+        {
             recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
             recyclerView.setAdapter(new PlaylistAdapter(getContext(),AudioList, this));
             Score.setText("Количество песен: " + String.valueOf(AudioList.size()));
         }
         return view;
-    }
-
-    private ArrayList<Audio> AddMusic(String path){
-        MediaMetadataRetriever metadataRetriever = new MediaMetadataRetriever();
-        metadataRetriever.setDataSource(path);
-        String artist = metadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST);
-        String title = metadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);
-        Audio audio = new Audio(path, title, artist);
-        AudioList.add(audio);
-        return AudioList;
     }
 
     @Override
@@ -93,9 +63,9 @@ public class Playlist_Fragment extends Fragment implements OnAudioSelectedListen
         Bundle bundle = new Bundle();
         bundle.putInt("pos",position);
         bundle.putParcelableArrayList("Audio", AudioList);
-        bundle.putString("path",AudioList.get(position).getPath());
         bundle.putString("title",AudioList.get(position).getTitle());
         bundle.putString("author",AudioList.get(position).getArtist());
+        bundle.putBoolean("fav",false);
         Player_Fragment fragment = new Player_Fragment();
         fragment.setArguments(bundle);
         getFragmentManager().beginTransaction().replace(R.id.fl_content, fragment).addToBackStack(null).commit();
@@ -103,6 +73,31 @@ public class Playlist_Fragment extends Fragment implements OnAudioSelectedListen
 
     @Override
     public void onAudioLongClicked(int position) {
-        Log.e("Name", ":" + AudioList.get(position).getTitle());
+        AlertDialog.Builder  builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("Подтверждение");
+        builder.setMessage("Вы хотите удалить эту песню?");
+        builder.setPositiveButton("Нет", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) { }
+        });
+        builder.setNegativeButton("Да", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                AudioList.remove(position);
+                try {
+                    FileOutputStream fos = new FileOutputStream(requireContext().getFilesDir().getPath() + "/Audio.text");
+                    ObjectOutputStream oos = new ObjectOutputStream(fos);
+                    oos.writeObject(AudioList);
+                    oos.close();
+                    fos.close();
+                } catch(Exception ex) {
+                    ex.printStackTrace();
+                }
+                Playlist_Fragment fragment = new Playlist_Fragment();
+                getFragmentManager().beginTransaction().replace(R.id.fl_content, fragment).addToBackStack(null).commit();
+            }
+        });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
     }
 }
