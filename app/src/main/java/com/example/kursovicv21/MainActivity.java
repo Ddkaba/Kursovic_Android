@@ -29,6 +29,9 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.navigation_chosen:
                     loadFragment(Choose_Fragment.newInstance());
                     return true;
+                case R.id.navigation_radio:
+                    loadFragment(Radio_Fragment.newInstance());
+                    return true;
             }
             return false;
         }

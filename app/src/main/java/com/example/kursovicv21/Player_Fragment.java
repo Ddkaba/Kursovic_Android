@@ -1,24 +1,20 @@
 package com.example.kursovicv21;
 
+import android.annotation.SuppressLint;
 import android.graphics.drawable.Drawable;
-import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-
 import com.google.android.material.slider.Slider;
 
 import java.io.FileInputStream;
@@ -161,8 +157,8 @@ public class Player_Fragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Drawable drawable = favourite.getDrawable();
-                if(drawable.getConstantState().equals(getResources().getDrawable(R.drawable.not_favorite).getConstantState())) {
-                    favourite.setImageResource(R.drawable.favorite);
+                if(drawable.getConstantState().equals(getResources().getDrawable(R.drawable.not_favorite_white).getConstantState())) {
+                    favourite.setImageResource(R.drawable.favorite_white);
                     AddMusicFavorite();
                     try {
                         FileOutputStream fos = new FileOutputStream(requireContext().getFilesDir().getPath() + "/Favorite.text");
@@ -175,7 +171,7 @@ public class Player_Fragment extends Fragment {
                     }
                 }
                 else{
-                    favourite.setImageResource(R.drawable.not_favorite);
+                    favourite.setImageResource(R.drawable.not_favorite_white);
                     int Fposition = 0;
                     for(Audio audio : Favorite){
                         if (audio.getPath().equals(AudioList.get(position).getPath())) break;
@@ -213,6 +209,7 @@ public class Player_Fragment extends Fragment {
         TotalTime = player.getDuration();
         player.setLooping(true);
         player.seekTo(0);
+        Slider.setValueTo(0);
         Slider.setValueTo(TotalTime);
         float speed = 1.0f;
         player.setPlaybackParams(player.getPlaybackParams().setSpeed(speed));
@@ -224,8 +221,8 @@ public class Player_Fragment extends Fragment {
             ObjectInputStream ois = new ObjectInputStream(fis);
             Favorite = (ArrayList<Audio>) ois.readObject();
             for(Audio audio : Favorite){
-                if(audio.getPath().equals(AudioList.get(position).getPath())) {favourite.setImageResource(R.drawable.favorite); break; }
-                else  favourite.setImageResource(R.drawable.not_favorite);
+                if(audio.getPath().equals(AudioList.get(position).getPath())) {favourite.setImageResource(R.drawable.favorite_white); break; }
+                else  favourite.setImageResource(R.drawable.not_favorite_white);
             }
             ois.close();
             fis.close();
@@ -236,7 +233,7 @@ public class Player_Fragment extends Fragment {
     }
 
     public String createTimeLabel(int time){
-        String timeLabel = "";
+        String timeLabel;
         int min = time/1000/60;
         int sec = time/1000 % 60;
         timeLabel = min + ":";

@@ -15,5 +15,9 @@
         android:id="@+id/navigation_filesystem"
         android:icon="@drawable/folder"
         android:title="@string/FileSystem" />
+    <item
+        android:id="@+id/navigation_radio"
+        android:icon="@drawable/radio_black"
+        android:title="@string/Radio" />
 
 </menu>

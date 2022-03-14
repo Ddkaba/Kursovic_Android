@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="55dp"
-    android:background="@color/gray">
+    android:background="@color/black_light">
 
 
     <ImageView
@@ -28,6 +28,7 @@
         android:paddingTop="5dp"
         android:text="@string/NameFile"
         android:textSize="20dp"
+        android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/imageButton_folder"

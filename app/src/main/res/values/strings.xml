@@ -6,4 +6,5 @@
     <string name="Playlist">Плейлист</string>
     <string name="Chosen">Избранное</string>
     <string name="FileSystem">Файлы</string>
+    <string name="Radio">Радио</string>
 </resources>
