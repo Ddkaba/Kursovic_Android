@@ -1,31 +1,21 @@
 package com.example.kursovicv21;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.media.MediaMetadataRetriever;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 
 public class Playlist_Fragment extends Fragment implements OnAudioSelectedListener{
@@ -45,8 +35,6 @@ public class Playlist_Fragment extends Fragment implements OnAudioSelectedListen
             ObjectInputStream ois = new ObjectInputStream(fis);
             AudioList = (ArrayList<Audio>) ois.readObject();
             ois.close();
-            if(fis!=null)
-                fis.close();
         } catch(Exception ex) { ex.printStackTrace(); }
         if(!AudioList.isEmpty())
         {

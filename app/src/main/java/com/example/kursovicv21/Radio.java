@@ -1,20 +1,21 @@
 package com.example.kursovicv21;
 
+
 public class Radio {
     private String URL;
+    private String NameRadio;
     private int Picture;
-    private int Hz;
 
-    public Radio(String URL, int picture, int hz) {
+    public Radio(String URL, String NameRadio, int picture) {
         this.URL = URL;
+        this.NameRadio = NameRadio;
         Picture = picture;
-        Hz = hz;
     }
 
     public String getURL() { return URL; }
     public int getPicture() { return Picture; }
-    public int getHz() { return Hz; }
+    public String getNameRadio() { return NameRadio; }
     public void setURL(String URL) { this.URL = URL; }
     public void setPicture(int picture) { Picture = picture; }
-    public void setHz(int hz) { Hz = hz; }
+    public void setNameRadio(String nameRadio) { NameRadio = nameRadio; }
 }

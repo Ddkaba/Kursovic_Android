@@ -15,12 +15,6 @@ public class ChooseAdapter extends RecyclerView.Adapter<ChooseAdapter.ViewHolder
     Context context;
     ArrayList<Audio> mAudio;
     OnAudioSelectedListener listener;
-    public ChooseAdapter(Context context, ArrayList<Audio> mAudio, OnAudioSelectedListener listener){
-        this.context = context;
-        this.mAudio = mAudio;
-        this.listener = listener;
-    }
-
     public class ViewHolder extends RecyclerView.ViewHolder{
         TextView PositionAuthorName;
 
@@ -29,6 +23,12 @@ public class ChooseAdapter extends RecyclerView.Adapter<ChooseAdapter.ViewHolder
             PositionAuthorName = itemView.findViewById(R.id.AuthorName);
         }
     }
+    public ChooseAdapter(Context context, ArrayList<Audio> mAudio, OnAudioSelectedListener listener){
+        this.context = context;
+        this.mAudio = mAudio;
+        this.listener = listener;
+    }
+
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {

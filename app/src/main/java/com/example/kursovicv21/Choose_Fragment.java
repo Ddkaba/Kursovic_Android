@@ -54,7 +54,7 @@ public class Choose_Fragment extends Fragment implements OnAudioSelectedListener
     }
 
     @Override
-    public void onAudioClicked(int position) {
+    public void onAudioClicked(int position) { //Метод обработки нажатия на элемент списка избранных песен
         Log.e("Name", ":" + Favorite.get(position).getPath());
         Bundle bundle = new Bundle();
         bundle.putInt("pos",position);
@@ -68,7 +68,7 @@ public class Choose_Fragment extends Fragment implements OnAudioSelectedListener
     }
 
     @Override
-    public void onAudioLongClicked(int position) {
+    public void onAudioLongClicked(int position) { //Метод обработки удержания на элемент списка избранных песен
         AlertDialog.Builder  builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Подтверждение");
         builder.setMessage("Вы хотите удалить эту песню?");

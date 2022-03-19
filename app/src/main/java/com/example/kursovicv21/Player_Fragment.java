@@ -16,7 +16,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import com.google.android.material.slider.Slider;
-
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
@@ -37,23 +36,12 @@ public class Player_Fragment extends Fragment {
     float TotalTime;
 
     public Player_Fragment(){}
-    public static Player_Fragment newInstance(){
-        return new Player_Fragment();
-    }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.player_fragment, container, false);
-        favourite = view.findViewById(R.id.Favorite);
-        PlayStop = view.findViewById(R.id.PlayStop);
-        Slider = view.findViewById(R.id.Slider);
-        Max = view.findViewById(R.id.MaxValue);
-        Min = view.findViewById(R.id.text);
-        NameSong = view.findViewById(R.id.NameSong);
-        Author = view.findViewById(R.id.AuthorName);
-        Back = view.findViewById(R.id.BackButton);
-        Next = view.findViewById(R.id.NextButton);
+        initialization(view);
 
         try{
             AudioList = getArguments().getParcelableArrayList("Audio");
@@ -78,7 +66,14 @@ public class Player_Fragment extends Fragment {
                     try{
                         sleep(1000);
                         currentposition = player.getCurrentPosition();
-                        Slider.setValue(currentposition);
+                        Handler handler = new Handler(getContext().getMainLooper());
+                        int Currentposition = currentposition;
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                Slider.setValue(Currentposition);
+                            }
+                        } );
                     }
                     catch (InterruptedException | IllegalStateException e){
                         e.printStackTrace();
@@ -90,15 +85,18 @@ public class Player_Fragment extends Fragment {
         updateSlider.start();
 
         Slider.addOnSliderTouchListener(new Slider.OnSliderTouchListener() {
+            @SuppressLint("RestrictedApi")
             @Override
             public void onStartTrackingTouch(@NonNull com.google.android.material.slider.Slider slider) { }
 
+            @SuppressLint("RestrictedApi")
             @Override
             public void onStopTrackingTouch(@NonNull com.google.android.material.slider.Slider slider) {
             }
         });
 
         Slider.addOnChangeListener(new Slider.OnChangeListener() {
+            @SuppressLint("RestrictedApi")
             @Override
             public void onValueChange(@NonNull com.google.android.material.slider.Slider slider, float value, boolean fromUser) {
                 if(fromUser){
@@ -160,15 +158,7 @@ public class Player_Fragment extends Fragment {
                 if(drawable.getConstantState().equals(getResources().getDrawable(R.drawable.not_favorite_white).getConstantState())) {
                     favourite.setImageResource(R.drawable.favorite_white);
                     AddMusicFavorite();
-                    try {
-                        FileOutputStream fos = new FileOutputStream(requireContext().getFilesDir().getPath() + "/Favorite.text");
-                        ObjectOutputStream oos = new ObjectOutputStream(fos);
-                        oos.writeObject(Favorite);
-                        oos.close();
-                        fos.close();
-                    } catch(Exception ex) {
-                        ex.printStackTrace();
-                    }
+                    FileOutput();
                 }
                 else{
                     favourite.setImageResource(R.drawable.not_favorite_white);
@@ -178,18 +168,11 @@ public class Player_Fragment extends Fragment {
                         Fposition = Fposition + 1;
                     }
                     Favorite.remove(Fposition);
-                    try {
-                        FileOutputStream fos = new FileOutputStream(requireContext().getFilesDir().getPath() + "/Favorite.text");
-                        ObjectOutputStream oos = new ObjectOutputStream(fos);
-                        oos.writeObject(Favorite);
-                        oos.close();
-                        fos.close();
-                    } catch(Exception ex) {
-                        ex.printStackTrace();
-                    }
+                    FileOutput();
                 }
             }
         });
+
 
         player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
@@ -197,9 +180,21 @@ public class Player_Fragment extends Fragment {
                 Next.performClick();
             }
         });
-
         return view;
     }
+
+    public void initialization(View view){
+        favourite = view.findViewById(R.id.Favorite);
+        PlayStop = view.findViewById(R.id.PlayStop);
+        Slider = view.findViewById(R.id.Slider);
+        Max = view.findViewById(R.id.MaxValue);
+        Min = view.findViewById(R.id.text);
+        NameSong = view.findViewById(R.id.NameSong);
+        Author = view.findViewById(R.id.AuthorName);
+        Back = view.findViewById(R.id.BackButton);
+        Next = view.findViewById(R.id.NextButton);
+    }
+
 
     public void Switching(int pos){
         Uri uri = Uri.parse(AudioList.get(pos).getPath());
@@ -251,4 +246,15 @@ public class Player_Fragment extends Fragment {
         return Favorite;
     }
 
+    public void FileOutput(){
+        try {
+            FileOutputStream fos = new FileOutputStream(requireContext().getFilesDir().getPath() + "/Favorite.text");
+            ObjectOutputStream oos = new ObjectOutputStream(fos);
+            oos.writeObject(Favorite);
+            oos.close();
+            fos.close();
+        } catch(Exception ex) {
+            ex.printStackTrace();
+        }
+    }
 }
