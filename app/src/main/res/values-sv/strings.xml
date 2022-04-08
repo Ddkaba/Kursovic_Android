@@ -1,0 +1,33 @@
+<resources>
+    <string name="app_name">MPAR</string>
+    <string name="NameMusic">Låttitel</string>
+    <string name="Author">Författare</string>
+    <string name="NameFile">Filnamn</string>
+    <string name="Playlist">Spellista</string>
+    <string name="Chosen">Favorit</string>
+    <string name="FileSystem">Arkivera</string>
+    <string name="Radio">Radio</string>
+    <string name="Control_Color">Färghantering</string>
+    <string name="Language">Språk</string>
+    <string name="Scale">Skala</string>
+    <string name="Info">Information</string>
+    <string name="Score_audio">Antal låtar:</string>
+    <string name="Confirmation">Bekräftelse</string>
+    <string name="Delete_Audio">Vill du ta bort den här låten?</string>
+    <string name="Add_Audio_Question">Vill du lägga till den här låten i din spellista?</string>
+    <string name="Add_Audio">Låtar läggs till i spellistan</string>
+    <string name="Necessary_add_audio">Du måste lägga till en låt</string>
+    <string name="Basic_color">Huvudfärg</string>
+    <string name="Additionally_color">Komplementfärg</string>
+    <string name="White">Vit</string>
+    <string name="Black">Den svarta</string>
+    <string name="Green">Grön</string>
+    <string name="Orange">Orange</string>
+    <string name="Red">Röd</string>
+    <string name="Music_Player">Musikspelare för att lyssna på musik och onlineradio</string>
+    <string name="Customer">Kund: FSPO SUAI</string>
+    <string name="Executor">Framförd av: Mikhailov Daniil, student vid FSPO SUAI</string>
+    <string name="QR">QR-kod för att kontakta författaren till projektet</string>
+    <string name="Yes">Ja</string>
+    <string name="No">Nej</string>
+</resources>

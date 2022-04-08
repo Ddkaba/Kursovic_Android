@@ -1,0 +1,33 @@
+<resources>
+    <string name="app_name">MPAR</string>
+    <string name="NameMusic">NameMusic</string>
+    <string name="Author">Author</string>
+    <string name="NameFile">Name file</string>
+    <string name="Playlist">Playlist</string>
+    <string name="Chosen">Chosen</string>
+    <string name="FileSystem">Files</string>
+    <string name="Radio">Radio</string>
+    <string name="Control_Color">Color Management</string>
+    <string name="Language">Language</string>
+    <string name="Scale">Scale</string>
+    <string name="Info">Information</string>
+    <string name="Score_audio">Number of songs:</string>
+    <string name="Confirmation">Confirmation</string>
+    <string name="Delete_Audio">Do you want to delete this song?</string>
+    <string name="Add_Audio_Question">Do you want to add this song to the playlist?</string>
+    <string name="Add_Audio">Songs added to playlist</string>
+    <string name="Necessary_add_audio">Need to add a song</string>
+    <string name="Basic_color">Basic color</string>
+    <string name="Additionally_color">Additionally color</string>
+    <string name="White">White</string>
+    <string name="Black">Black</string>
+    <string name="Green">Green</string>
+    <string name="Orange">Orange</string>
+    <string name="Red">Red</string>
+    <string name="Music_Player">Music player to listen to music and online radio</string>
+    <string name="Customer">Customer: FSPO SUAI</string>
+    <string name="Executor">Performed by: Mikhailov Daniil, student of the FSPO SUAI</string>
+    <string name="QR">QR code to contact the author of the project</string>
+    <string name="Yes">Yes</string>
+    <string name="No">No</string>
+</resources>

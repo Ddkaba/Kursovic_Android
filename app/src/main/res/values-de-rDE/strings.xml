@@ -1,0 +1,33 @@
+<resources>
+    <string name="app_name">MPAR</string>
+    <string name="NameMusic">Name des Liedes</string>
+    <string name="Author">Autor</string>
+    <string name="NameFile">Dateiname</string>
+    <string name="Playlist">Wiedergabeliste</string>
+    <string name="Chosen">Favoriten</string>
+    <string name="FileSystem">Dateien</string>
+    <string name="Radio">Radio</string>
+    <string name="Control_Color">Farbmanagement</string>
+    <string name="Language">Sprache</string>
+    <string name="Scale">Skala</string>
+    <string name="Info">Information</string>
+    <string name="Score_audio">Anzahl der Lieder:</string>
+    <string name="Confirmation">Bestätigung</string>
+    <string name="Delete_Audio">Möchten Sie dieses Lied löschen?</string>
+    <string name="Add_Audio_Question">Möchten Sie dieses Lied zur Playlist hinzufügen?</string>
+    <string name="Add_Audio">Songs zur Wiedergabeliste hinzugefügt</string>
+    <string name="Necessary_add_audio">Muss ein Lied hinzufügen</string>
+    <string name="Basic_color">Hauptfarbe</string>
+    <string name="Additionally_color">Komplementärfarbe</string>
+    <string name="White">Weiß</string>
+    <string name="Black">Schwarze</string>
+    <string name="Green">Grün</string>
+    <string name="Orange">Orange</string>
+    <string name="Red">Rot</string>
+    <string name="Music_Player">Musik-Player zum Hören von Musik und Online-Radio</string>
+    <string name="Customer">Kunde: FSPO SUAI</string>
+    <string name="Executor">Aufgeführt von: Mikhailov Daniil, Student der FSPO SUAI</string>
+    <string name="QR">QR-Code, um den Autor des Projekts zu kontaktieren</string>
+    <string name="Yes">Ja</string>
+    <string name="No">Nein</string>
+</resources>

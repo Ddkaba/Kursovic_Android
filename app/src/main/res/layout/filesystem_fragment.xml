@@ -7,11 +7,11 @@
     android:background="@color/black_light">
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/cardView4"
+        android:id="@+id/FileSystem_CardView"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         app:cardBackgroundColor="@color/green"
-        app:cardCornerRadius="5dp"
+        app:cardCornerRadius="1dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
@@ -20,7 +20,6 @@
             android:layout_width="50dp"
             android:layout_height="match_parent"
             android:layout_marginLeft="5dp"
-            android:background="@color/green"
             android:src="@drawable/check">
         </ImageView>
         <LinearLayout
@@ -33,7 +32,7 @@
         android:id="@+id/recyclerViewFile"
         android:layout_width="415dp"
         android:layout_height="680dp"
-        app:layout_constraintBottom_toTopOf="@+id/cardView4"
+        app:layout_constraintBottom_toTopOf="@+id/FileSystem_CardView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"

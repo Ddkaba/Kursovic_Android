@@ -1,8 +1,11 @@
 package com.example.kursovicv21;
 
+import static android.content.Context.MODE_PRIVATE;
+
 import android.Manifest;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.media.MediaMetadataRetriever;
 import android.os.Bundle;
@@ -16,6 +19,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -31,10 +35,12 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
-public class FileSystem_Fragment extends Fragment implements OnFileSelectedListener{
-    ImageView Add;
+public class FileSystem_Fragment extends Fragment implements OnFileSelectedListener, Color_Setting{
     ArrayList<String> Path = new ArrayList<>();
     ArrayList<Audio> AudioList = new ArrayList<>();
+    SharedPreferences sharedPreferences;
+    CardView FileSystem_CardView;
+    ImageView Add;
     String data;
     String path;
     File root;
@@ -46,12 +52,12 @@ public class FileSystem_Fragment extends Fragment implements OnFileSelectedListe
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.filesystem_fragment, container, false);
+        FileSystem_CardView = view.findViewById(R.id.FileSystem_CardView);
+        sharedPreferences =  this.getActivity().getSharedPreferences("Color_setting", MODE_PRIVATE);
+        Colors(sharedPreferences);
         Add = view.findViewById(R.id.check);
-        if(checkPermission()){
-            path = Environment.getExternalStorageDirectory().getPath();
-        }else{
-            requestPermission();
-        }
+        if(checkPermission()) path = Environment.getExternalStorageDirectory().getPath();
+        else requestPermission();
         root = new File(path);
         try {
             data = getArguments().getString("path");
@@ -75,27 +81,22 @@ public class FileSystem_Fragment extends Fragment implements OnFileSelectedListe
                         AudioList = (ArrayList<Audio>) ois.readObject();
                         ois.close();
                         fis.close();
-                    } catch(Exception ex) {
-                        ex.printStackTrace();
-                        Log.e("Error"," ");
-                    }
-                    for(int i = 0;i<Path.size();i++){
-                        AddMusic(Path.get(i));
-                    }
+                    } catch(Exception ex) { ex.printStackTrace(); }
+                    for(int i = 0;i<Path.size();i++){ AddMusic(Path.get(i)); }
                     try {
                         FileOutputStream fos = new FileOutputStream(requireContext().getFilesDir().getPath() + "/Audio.text");
                         ObjectOutputStream oos = new ObjectOutputStream(fos);
                         oos.writeObject(AudioList);
                         oos.close();
                         fos.close();
-                        Toast toast = Toast.makeText(getContext(), "Песни добавлены в плейлист", Toast.LENGTH_SHORT);
+                        Toast toast = Toast.makeText(getContext(), getResources().getString(R.string.Add_Audio), Toast.LENGTH_SHORT);
                         toast.show();
                     } catch(Exception ex) {
                         ex.printStackTrace();
                     }
                 }
                 else {
-                    Toast toast = Toast.makeText(getContext(), "Необходимо добавить песню", Toast.LENGTH_SHORT);
+                    Toast toast = Toast.makeText(getContext(), getResources().getString(R.string.Necessary_add_audio), Toast.LENGTH_SHORT);
                     toast.show(); }
             }
         });
@@ -104,17 +105,13 @@ public class FileSystem_Fragment extends Fragment implements OnFileSelectedListe
 
     private boolean checkPermission(){
         int result = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE);
-        if(result == PackageManager.PERMISSION_GRANTED){
-            return true;
-        }else{
-            return false;
-        }
+        if(result == PackageManager.PERMISSION_GRANTED) return true;
+        else return false;
     }
 
     private void requestPermission(){
         if(ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)){
             Toast.makeText(getActivity(), "Storage permission", Toast.LENGTH_SHORT);
-
         } else ActivityCompat.requestPermissions(getActivity(), new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE}, 111);
     }
 
@@ -130,13 +127,13 @@ public class FileSystem_Fragment extends Fragment implements OnFileSelectedListe
         else{
             if(file.getName().toLowerCase().endsWith(".mp3")) {
                 AlertDialog.Builder  builder = new AlertDialog.Builder(getActivity());
-                builder.setTitle("Подтверждение");
-                builder.setMessage("Вы хотите добавить эту песню в плейлист?");
-                builder.setPositiveButton("Нет", new DialogInterface.OnClickListener() {
+                builder.setTitle(getResources().getString(R.string.Confirmation));
+                builder.setMessage(getResources().getString(R.string.Add_Audio_Question));
+                builder.setPositiveButton(getResources().getString(R.string.No), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) { }
                 });
-                builder.setNegativeButton("Да", new DialogInterface.OnClickListener() {
+                builder.setNegativeButton(getResources().getString(R.string.Yes), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) { Path.add(file.getAbsolutePath()); }
                 });
@@ -153,5 +150,13 @@ public class FileSystem_Fragment extends Fragment implements OnFileSelectedListe
         Audio audio = new Audio(path, title, artist);
         AudioList.add(audio);
         return AudioList;
+    }
+
+    public void Colors(SharedPreferences sharedPreferences) { //Метод смены цвета приложения
+        String Basic_color = sharedPreferences.getString("Basic Color", "Black");
+        String Additionally_color = sharedPreferences.getString("Additionally Color", "Green");
+        if (Additionally_color.equals("Orange")) FileSystem_CardView.setCardBackgroundColor((ContextCompat.getColor(getContext(), R.color.orange)));
+        if (Additionally_color.equals("Red")) FileSystem_CardView.setCardBackgroundColor((ContextCompat.getColor(getContext(), R.color.red)));
+        if (Additionally_color.equals("Green")) FileSystem_CardView.setCardBackgroundColor((ContextCompat.getColor(getContext(), R.color.green)));
     }
 }

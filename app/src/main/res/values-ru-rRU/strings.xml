@@ -19,15 +19,15 @@
     <string name="Necessary_add_audio">Необходимо добавить песню</string>
     <string name="Basic_color">Основной цвет</string>
     <string name="Additionally_color">Дополнительный цвет</string>
-    <string name="Music_Player">Музыкальный плеер для прослушивания музыки и онлайн-радио</string>
-    <string name="Customer">Заказчик: ФСПО ГУАП</string>
-    <string name="Executor">Испольнитель: Михайлов Даниил, студент ФСПО ГУАП</string>
-    <string name="QR">QR-код для связи с автором проекта</string>
     <string name="White">Белый</string>
     <string name="Black">Черный</string>
     <string name="Green">Зеленый</string>
     <string name="Orange">Оранжевый</string>
     <string name="Red">Красный</string>
+    <string name="Music_Player">Музыкальный плеер для прослушивания музыки и онлайн-радио</string>
+    <string name="Customer">Заказчик: ФСПО ГУАП</string>
+    <string name="Executor">Испольнитель: Михайлов Даниил, студент ФСПО ГУАП</string>
+    <string name="QR">QR-код для связи с автором проекта</string>
     <string name="Yes">Да</string>
     <string name="No">Нет</string>
 </resources>

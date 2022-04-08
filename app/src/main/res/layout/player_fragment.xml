@@ -7,7 +7,7 @@
     android:background="@color/black_light">
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/cardView3"
+        android:id="@+id/Player_CardView_Top"
         android:layout_width="match_parent"
         android:layout_height="40dp"
         app:cardBackgroundColor="@color/green"
@@ -19,6 +19,14 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+
+            <ImageButton
+                android:id="@+id/Player_setting"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0"
+                android:background="@color/green"
+                app:srcCompat="@drawable/settings_black" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
@@ -29,6 +37,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:background="@color/black_light"
+        android:textColor="@color/white"
         android:src="@drawable/not_favorite_white"
         app:layout_constraintBottom_toTopOf="@+id/cardView"
         app:layout_constraintEnd_toEndOf="parent"
@@ -49,7 +58,7 @@
         app:layout_constraintBottom_toTopOf="@+id/NameSong"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cardView3">
+        app:layout_constraintTop_toBottomOf="@+id/Player_CardView_Top">
 
         <ImageView
             android:id="@+id/imageView"
@@ -69,12 +78,13 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
         android:text="@string/NameMusic"
-        android:textColor="@color/light_gray"
+        android:background="@color/black_light"
+        android:textColor="@color/white"
         android:textSize="18dp"
         app:layout_constraintBottom_toTopOf="@+id/AuthorName"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/cardView3"
+        app:layout_constraintTop_toTopOf="@+id/Player_CardView_Top"
         app:layout_constraintVertical_bias="1.0" />
 
     <TextView
@@ -83,7 +93,8 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="25dp"
         android:text="@string/Author"
-        android:textColor="@color/light_gray"
+        android:background="@color/black_light"
+        android:textColor="@color/white"
         android:textSize="18dp"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout"
         app:layout_constraintEnd_toEndOf="parent"
@@ -96,7 +107,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="40dp"
-        app:layout_constraintBottom_toTopOf="@+id/cardView2"
+        app:layout_constraintBottom_toTopOf="@+id/Player_CardView_Bottom"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
@@ -106,8 +117,9 @@
             android:layout_height="48dp"
             android:gravity="center"
             android:text="0:00"
-            android:textColor="@color/light_gray"
-            android:textSize="20dp">
+            android:background="@color/black_light"
+            android:textColor="@color/white"
+            android:textSize="15dp">
         </TextView>
 
         <com.google.android.material.slider.Slider
@@ -128,14 +140,15 @@
             android:gravity="center"
             android:paddingBottom="1dp"
             android:text="3:00"
-            android:textColor="@color/light_gray"
-            android:textSize="20dp">
+            android:background="@color/black_light"
+            android:textColor="@color/white"
+            android:textSize="15dp">
         </TextView>
     </LinearLayout>
 
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/cardView2"
+        android:id="@+id/Player_CardView_Bottom"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         app:cardBackgroundColor="@color/yellow"

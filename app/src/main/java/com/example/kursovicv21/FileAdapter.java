@@ -1,5 +1,6 @@
 package com.example.kursovicv21;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -57,10 +58,12 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder>{
             holder.imageView.setImageResource(R.drawable.file);
         }
         holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("ResourceAsColor")
             @Override
             public void onClick(View v) {
-                holder.itemView.setBackgroundColor(Color.parseColor("#efefef"));
-                holder.imageView.setBackgroundColor(Color.parseColor("#efefef"));
+                holder.itemView.setBackgroundColor(Color.parseColor("#b0b0b0"));
+                holder.imageView.setBackgroundColor(Color.parseColor("#b0b0b0"));
+                holder.textView.setTextColor(R.color.black);
                 listener.onFileClicked(selectedFile);
             }
         });

@@ -13,6 +13,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.KursovicV21">
+        <activity android:name=".SettingActivity">
+        </activity>
         <activity
             android:name=".MainActivity"
             android:exported="true">

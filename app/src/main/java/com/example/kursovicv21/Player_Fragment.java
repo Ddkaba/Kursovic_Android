@@ -1,6 +1,12 @@
 package com.example.kursovicv21;
 
+import static android.content.Context.MODE_PRIVATE;
+
 import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -14,6 +20,8 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import com.google.android.material.slider.Slider;
 import java.io.FileInputStream;
@@ -23,40 +31,58 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
-public class Player_Fragment extends Fragment {
+public class Player_Fragment extends Fragment implements Color_Setting {
     static MediaPlayer player;
     ArrayList<Audio> AudioList;
     ArrayList<Audio> Favorite = new ArrayList<>();
-    Integer position;
-    ImageButton favourite, PlayStop, Next, Back;
+    ImageButton favourite, PlayStop, Next, Back, Player_Setting;
+    CardView BottomCardView, TopCardView;
+    SharedPreferences sharedPreferences;
     TextView Max, Min, NameSong, Author;
-    Slider Slider;
-    String name, author;
     Thread updateSlider;
+    String name, author;
+    Integer position;
     float TotalTime;
+    Slider Slider;
 
     public Player_Fragment(){}
+
+    @Override
+    public void onStop() {
+        if(player != null && player.isPlaying()) player.pause();
+        PlayStop.setImageResource(R.drawable.play);
+        super.onStop();
+    }
+
+    @Override
+    public void onResume() {
+        if(player != null) {
+            player.start();
+            PlayStop.setImageResource(R.drawable.pause);
+        }
+        Colors(sharedPreferences);
+        super.onResume();
+    }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.player_fragment, container, false);
         initialization(view);
+        sharedPreferences =  this.getActivity().getSharedPreferences("Color_setting", MODE_PRIVATE);
+        Colors(sharedPreferences);
 
         try{
             AudioList = getArguments().getParcelableArrayList("Audio");
             name = getArguments().getString("title");
             author = getArguments().getString("author");
             position = getArguments().getInt("pos");
-            if(player != null)
-            {
+            if(player != null) {
                 player.stop();
                 player.release();
             }
             Switching(position);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
+        }catch (Exception e){ e.printStackTrace(); }
 
         updateSlider = new Thread(){
             @Override
@@ -88,11 +114,9 @@ public class Player_Fragment extends Fragment {
             @SuppressLint("RestrictedApi")
             @Override
             public void onStartTrackingTouch(@NonNull com.google.android.material.slider.Slider slider) { }
-
             @SuppressLint("RestrictedApi")
             @Override
-            public void onStopTrackingTouch(@NonNull com.google.android.material.slider.Slider slider) {
-            }
+            public void onStopTrackingTouch(@NonNull com.google.android.material.slider.Slider slider) { }
         });
 
         Slider.addOnChangeListener(new Slider.OnChangeListener() {
@@ -151,6 +175,14 @@ public class Player_Fragment extends Fragment {
             }
         });
 
+        Player_Setting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), SettingActivity.class);
+                startActivity(intent);
+            }
+        });
+
         favourite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -183,20 +215,23 @@ public class Player_Fragment extends Fragment {
         return view;
     }
 
-    public void initialization(View view){
+    public void initialization(View view){ //Метод инициализации элементов
+        BottomCardView = view.findViewById(R.id.Player_CardView_Bottom);
+        TopCardView = view.findViewById(R.id.Player_CardView_Top);
+        Player_Setting = view.findViewById(R.id.Player_setting);
         favourite = view.findViewById(R.id.Favorite);
         PlayStop = view.findViewById(R.id.PlayStop);
-        Slider = view.findViewById(R.id.Slider);
-        Max = view.findViewById(R.id.MaxValue);
-        Min = view.findViewById(R.id.text);
         NameSong = view.findViewById(R.id.NameSong);
         Author = view.findViewById(R.id.AuthorName);
         Back = view.findViewById(R.id.BackButton);
         Next = view.findViewById(R.id.NextButton);
+        Slider = view.findViewById(R.id.Slider);
+        Max = view.findViewById(R.id.MaxValue);
+        Min = view.findViewById(R.id.text);
     }
 
 
-    public void Switching(int pos){
+    public void Switching(int pos){ //Метод переключения между песнями
         Uri uri = Uri.parse(AudioList.get(pos).getPath());
         player = MediaPlayer.create(getContext(),uri);
         NameSong.setText(AudioList.get(pos).getTitle());
@@ -208,8 +243,7 @@ public class Player_Fragment extends Fragment {
         Slider.setValueTo(TotalTime);
         float speed = 1.0f;
         player.setPlaybackParams(player.getPlaybackParams().setSpeed(speed));
-        Max.setText(String.format("%d:%d", TimeUnit.MILLISECONDS.toMinutes((long) TotalTime), TimeUnit.MILLISECONDS.toSeconds((long) TotalTime) -
-                TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes((long) TotalTime))));
+        Max.setText(createTimeLabel((int)TotalTime));
         PlayStop.setImageResource(R.drawable.pause);
         try {
             FileInputStream fis = new FileInputStream(requireContext().getFilesDir().getPath() + "/Favorite.text");
@@ -227,7 +261,7 @@ public class Player_Fragment extends Fragment {
         player.start();
     }
 
-    public String createTimeLabel(int time){
+    public String createTimeLabel(int time){ //Метод создания нового TextView для пользователя при прослушивании и переключении аудиозаписи
         String timeLabel;
         int min = time/1000/60;
         int sec = time/1000 % 60;
@@ -255,6 +289,45 @@ public class Player_Fragment extends Fragment {
             fos.close();
         } catch(Exception ex) {
             ex.printStackTrace();
+        }
+    }
+
+    public void Colors(SharedPreferences sharedPreferences) { //Метод смены цвета приложения
+        String Basic_color = sharedPreferences.getString("Basic Color", "Black");
+        String Additionally_color = sharedPreferences.getString("Additionally Color", "Green");
+        if (Additionally_color.equals("Orange")) {
+            Slider.setThumbTintList(ColorStateList.valueOf((ContextCompat.getColor(getContext(), R.color.orange))));
+            Slider.setTrackActiveTintList(ColorStateList.valueOf((ContextCompat.getColor(getContext(), R.color.orange))));
+            Slider.setTrackInactiveTintList(ColorStateList.valueOf((ContextCompat.getColor(getContext(), R.color.red))));
+            TopCardView.setCardBackgroundColor((ContextCompat.getColor(getContext(), R.color.orange)));
+            BottomCardView.setCardBackgroundColor((ContextCompat.getColor(getContext(), R.color.orange)));
+            Player_Setting.setBackgroundColor((ContextCompat.getColor(getContext(), R.color.orange)));
+            PlayStop.setBackgroundColor((ContextCompat.getColor(getContext(), R.color.orange)));
+            Next.setBackgroundColor((ContextCompat.getColor(getContext(), R.color.orange)));
+            Back.setBackgroundColor((ContextCompat.getColor(getContext(), R.color.orange)));
+        }
+        if (Additionally_color.equals("Red")){
+            Slider.setThumbTintList(ColorStateList.valueOf((ContextCompat.getColor(getContext(), R.color.red))));
+            Slider.setTrackActiveTintList(ColorStateList.valueOf((ContextCompat.getColor(getContext(), R.color.red))));
+            Slider.setTrackInactiveTintList(ColorStateList.valueOf((ContextCompat.getColor(getContext(), R.color.orange))));
+            TopCardView.setCardBackgroundColor((ContextCompat.getColor(getContext(), R.color.red)));
+            BottomCardView.setCardBackgroundColor((ContextCompat.getColor(getContext(), R.color.red)));
+            Player_Setting.setBackgroundColor((ContextCompat.getColor(getContext(), R.color.red)));
+            PlayStop.setBackgroundColor((ContextCompat.getColor(getContext(), R.color.red)));
+            Next.setBackgroundColor((ContextCompat.getColor(getContext(), R.color.red)));
+            Back.setBackgroundColor((ContextCompat.getColor(getContext(), R.color.red)));
+
+        }
+        if (Additionally_color.equals("Green")){
+            Slider.setThumbTintList(ColorStateList.valueOf((ContextCompat.getColor(getContext(), R.color.black_yellow))));
+            Slider.setTrackActiveTintList(ColorStateList.valueOf(ContextCompat.getColor(getContext(), R.color.yellow)));
+            Slider.setTrackInactiveTintList(ColorStateList.valueOf(ContextCompat.getColor(getContext(), R.color.green)));
+            TopCardView.setCardBackgroundColor((ContextCompat.getColor(getContext(), R.color.green)));
+            BottomCardView.setCardBackgroundColor((ContextCompat.getColor(getContext(), R.color.green)));
+            Player_Setting.setBackgroundColor((ContextCompat.getColor(getContext(), R.color.green)));
+            PlayStop.setBackgroundColor((ContextCompat.getColor(getContext(), R.color.green)));
+            Next.setBackgroundColor((ContextCompat.getColor(getContext(), R.color.green)));
+            Back.setBackgroundColor((ContextCompat.getColor(getContext(), R.color.green)));
         }
     }
 }

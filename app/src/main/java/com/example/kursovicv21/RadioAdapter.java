@@ -9,10 +9,13 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class RadioAdapter extends RecyclerView.Adapter<RadioAdapter.ViewHolder> {
     OnRadioSelectedListener listener;
+    ArrayList<ImageView> imageViews = new ArrayList<>();
     public class ViewHolder extends RecyclerView.ViewHolder{
         public TextView RadioName;
         public ImageView RadioImage;
@@ -20,7 +23,7 @@ public class RadioAdapter extends RecyclerView.Adapter<RadioAdapter.ViewHolder> 
         public ImageView imageView;
         public ViewHolder(View itemView) {
             super(itemView);
-            RadioName = itemView.findViewById(R.id.RadioName);
+            RadioName = itemView.findViewById(R.id.RadioName); //Инициализация различных элементов
             RadioImage = itemView.findViewById(R.id.RadioImageView);
             progressBar = itemView.findViewById(R.id.progressBar);
             imageView = itemView.findViewById(R.id.imageViewSound);
@@ -28,7 +31,7 @@ public class RadioAdapter extends RecyclerView.Adapter<RadioAdapter.ViewHolder> 
     }
 
     private List<Radio> mRadio;
-    public RadioAdapter(List<Radio> mRadio, OnRadioSelectedListener listener) { this.mRadio = mRadio; this.listener = listener; }
+    public RadioAdapter(List<Radio> mRadio, OnRadioSelectedListener listener) { this.mRadio = mRadio; this.listener = listener; } //Конструктор
 
     @NonNull
     @Override
@@ -46,18 +49,21 @@ public class RadioAdapter extends RecyclerView.Adapter<RadioAdapter.ViewHolder> 
         Radio radio = mRadio.get(position);
         ProgressBar progressBar = holder.progressBar;
         ImageView imageView = holder.imageView;
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
+        imageView.setVisibility(View.INVISIBLE); //Скрытие элемента imageView
+        progressBar.setVisibility(View.INVISIBLE); //Скрытие элемента ProgressBar
+        holder.itemView.setOnClickListener(new View.OnClickListener() { //Обработка нажатия на элемент списка RecyclerView
             @Override
             public void onClick(View v) {
                 listener.clickOnImage(pos, progressBar, imageView);
             }
         });
         TextView RadioN = holder.RadioName;
-        RadioN.setText(radio.getNameRadio());
+        RadioN.setText(radio.getNameRadio()); //Заполнение элемента нужными данными
         ImageView RadioI = holder.RadioImage;
-        RadioI.setImageResource(radio.getPicture());
+        RadioI.setImageResource(radio.getPicture()); //Заполнение элемента нужными данными
     }
 
     @Override
-    public int getItemCount() { return  mRadio.size(); }
+    public int getItemCount() { return  mRadio.size(); } //Получение количества элементов списка
+
 }

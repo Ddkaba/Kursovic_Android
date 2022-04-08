@@ -1,0 +1,33 @@
+<resources>
+    <string name="app_name">MPAR</string>
+    <string name="NameMusic">Kappaleen nimi</string>
+    <string name="Author">Kirjoittaja</string>
+    <string name="NameFile">Tiedoston nimi</string>
+    <string name="Playlist">Soittolista</string>
+    <string name="Chosen">Suosikit</string>
+    <string name="FileSystem">Tiedostot</string>
+    <string name="Radio">Radio</string>
+    <string name="Control_Color">Värinhallinta</string>
+    <string name="Language">Kieli</string>
+    <string name="Scale">Mittakaava</string>
+    <string name="Info">Tiedot</string>
+    <string name="Score_audio">Kappaleiden määrä:</string>
+    <string name="Confirmation">Vahvistus</string>
+    <string name="Delete_Audio">Haluatko poistaa tämän kappaleen?</string>
+    <string name="Add_Audio_Question">Haluatko lisätä tämän kappaleen soittolistaan?</string>
+    <string name="Add_Audio">Kappaleet lisätty soittolistaan</string>
+    <string name="Necessary_add_audio">Pitää lisätä kappale</string>
+    <string name="Basic_color">Pääväri</string>
+    <string name="Additionally_color">Täydentävä väri</string>
+    <string name="White">Valkoinen</string>
+    <string name="Black">Musta</string>
+    <string name="Green">Vihreä</string>
+    <string name="Orange">Oranssi</string>
+    <string name="Red">Punainen</string>
+    <string name="Music_Player">Musiikkisoitin musiikin ja online-radion kuunteluun</string>
+    <string name="Customer">Asiakas: FSPO SUAI</string>
+    <string name="Executor">Esittäjä: Mikhailov Daniil, FSPO SUAI:n opiskelija</string>
+    <string name="QR">QR-koodi, jolla voit ottaa yhteyttä projektin tekijään</string>
+    <string name="Yes">Joo</string>
+    <string name="No">Ei</string>
+</resources>
