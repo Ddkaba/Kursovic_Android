@@ -30,4 +30,5 @@
     <string name="QR">QR-koodi, jolla voit ottaa yhteyttä projektin tekijään</string>
     <string name="Yes">Joo</string>
     <string name="No">Ei</string>
+    <string name="Internet">Ei Internet-yhteyttä</string>
 </resources>

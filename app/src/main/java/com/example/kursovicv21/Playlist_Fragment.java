@@ -61,15 +61,13 @@ public class Playlist_Fragment extends Fragment implements OnAudioSelectedListen
 
     @Override
     public void onAudioClicked(int position) { //Обработка нажатия на элемент списка аудиозаписей
-        Bundle bundle = new Bundle();
-        bundle.putInt("pos",position);
-        bundle.putParcelableArrayList("Audio", AudioList);
-        bundle.putString("title",AudioList.get(position).getTitle());
-        bundle.putString("author",AudioList.get(position).getArtist());
-        bundle.putBoolean("fav",false);
-        Player_Fragment fragment = new Player_Fragment();
-        fragment.setArguments(bundle);
-        getFragmentManager().beginTransaction().replace(R.id.fl_content, fragment).addToBackStack(null).commit();
+        Intent intent = new Intent(getContext(), Player_Fragment.class);
+        intent.putExtra("pos",position);
+        intent.putExtra("Audio", AudioList);
+        intent.putExtra("title",AudioList.get(position).getTitle());
+        intent.putExtra("author",AudioList.get(position).getArtist());
+        intent.putExtra("fav",false);
+        startActivity(intent);
     }
 
     @Override

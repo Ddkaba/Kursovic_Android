@@ -49,8 +49,6 @@ public class RadioAdapter extends RecyclerView.Adapter<RadioAdapter.ViewHolder> 
         Radio radio = mRadio.get(position);
         ProgressBar progressBar = holder.progressBar;
         ImageView imageView = holder.imageView;
-        imageView.setVisibility(View.INVISIBLE); //Скрытие элемента imageView
-        progressBar.setVisibility(View.INVISIBLE); //Скрытие элемента ProgressBar
         holder.itemView.setOnClickListener(new View.OnClickListener() { //Обработка нажатия на элемент списка RecyclerView
             @Override
             public void onClick(View v) {

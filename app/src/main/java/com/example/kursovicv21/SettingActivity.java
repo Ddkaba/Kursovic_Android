@@ -185,16 +185,6 @@ public class SettingActivity extends AppCompatActivity implements OnSettingSelec
         if(Additionally_color.equals("Orange")) Setting_CardView.setCardBackgroundColor((ContextCompat.getColor(this, R.color.orange)));
         if(Additionally_color.equals("Red")) Setting_CardView.setCardBackgroundColor((ContextCompat.getColor(this, R.color.red)));
         if(Additionally_color.equals("Green"))Setting_CardView.setCardBackgroundColor((ContextCompat.getColor(this, R.color.green)));
-        /*
-        if(Basic_color.equals("White")){
-            mConstraintLayout.setBackgroundColor((ContextCompat.getColor(this, R.color.white)));
-            for (int i = 0;i <= imageViews.size() - 1; i++) {
-                ImageView imageView = imageViews.get(i);
-                imageView.setImageResource();
-            }
-        }
-        else {mConstraintLayout.setBackgroundColor((ContextCompat.getColor(this, R.color.black_light)));}
-         */
     }
 
     public void Information(){ //Метод для вывода информации о проекте
@@ -203,6 +193,12 @@ public class SettingActivity extends AppCompatActivity implements OnSettingSelec
                 + "\n" + getResources().getString(R.string.Executor) + "\n" + "<-" + getResources().getString(R.string.QR));
         Description.setVisibility(View.VISIBLE);
         QR.setVisibility(View.VISIBLE);
+        QR.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                QR.setImageResource(R.drawable.qr1);
+            }
+        });
         new CountDownTimer(30000, 1000){
             @Override
             public void onTick(long millisUntilFinished) { }

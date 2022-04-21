@@ -30,4 +30,5 @@
     <string name="QR">QR-kod för att kontakta författaren till projektet</string>
     <string name="Yes">Ja</string>
     <string name="No">Nej</string>
+    <string name="Internet">Ingen internetanslutning</string>
 </resources>

@@ -30,4 +30,5 @@
     <string name="QR">QR-код для связи с автором проекта</string>
     <string name="Yes">Да</string>
     <string name="No">Нет</string>
+    <string name="Internet">Отсутствует подключение к интернету</string>
 </resources>

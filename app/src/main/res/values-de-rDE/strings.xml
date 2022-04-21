@@ -30,4 +30,5 @@
     <string name="QR">QR-Code, um den Autor des Projekts zu kontaktieren</string>
     <string name="Yes">Ja</string>
     <string name="No">Nein</string>
+    <string name="Internet">Keine Internetverbindung</string>
 </resources>

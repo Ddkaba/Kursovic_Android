@@ -36,7 +36,6 @@ public class MainActivity extends AppCompatActivity implements Languages_Setting
         navigation.setOnItemSelectedListener(Navigation);
         sharedPreferences = getSharedPreferences("Color_setting", MODE_PRIVATE);
         Colors(sharedPreferences);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         getSupportFragmentManager().beginTransaction().replace(R.id.fl_content, new Playlist_Fragment()).commit();
     }
 

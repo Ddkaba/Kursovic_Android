@@ -16,13 +16,19 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+
+import com.google.android.material.slider.LabelFormatter;
 import com.google.android.material.slider.Slider;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -31,8 +37,8 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
-public class Player_Fragment extends Fragment implements Color_Setting {
-    static MediaPlayer player;
+public class Player_Fragment extends AppCompatActivity implements Color_Setting {
+    MediaPlayer player;
     ArrayList<Audio> AudioList;
     ArrayList<Audio> Favorite = new ArrayList<>();
     ImageButton favourite, PlayStop, Next, Back, Player_Setting;
@@ -64,19 +70,21 @@ public class Player_Fragment extends Fragment implements Color_Setting {
         super.onResume();
     }
 
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.player_fragment, container, false);
-        initialization(view);
-        sharedPreferences =  this.getActivity().getSharedPreferences("Color_setting", MODE_PRIVATE);
-        Colors(sharedPreferences);
 
+    @Nullable
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        getSupportActionBar().hide();
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        setContentView(R.layout.player_fragment);
+        initialization();
+        sharedPreferences =  this.getSharedPreferences("Color_setting", MODE_PRIVATE);
+        Colors(sharedPreferences);
         try{
-            AudioList = getArguments().getParcelableArrayList("Audio");
-            name = getArguments().getString("title");
-            author = getArguments().getString("author");
-            position = getArguments().getInt("pos");
+            AudioList = getIntent().getParcelableArrayListExtra("Audio");
+            name = getIntent().getStringExtra("title");
+            author = getIntent().getStringExtra("author");
+            position = getIntent().getIntExtra("pos", 0);
             if(player != null) {
                 player.stop();
                 player.release();
@@ -92,7 +100,7 @@ public class Player_Fragment extends Fragment implements Color_Setting {
                     try{
                         sleep(1000);
                         currentposition = player.getCurrentPosition();
-                        Handler handler = new Handler(getContext().getMainLooper());
+                        Handler handler = new Handler(getApplicationContext().getMainLooper());
                         int Currentposition = currentposition;
                         handler.post(new Runnable() {
                             @Override
@@ -170,7 +178,7 @@ public class Player_Fragment extends Fragment implements Color_Setting {
             public void onClick(View v) {
                 player.stop();
                 player.release();
-                position = ((position+1)%AudioList.size());
+                position = ((position+1)>AudioList.size()-1)?(0):(position+1);
                 Switching(position);
             }
         });
@@ -178,7 +186,7 @@ public class Player_Fragment extends Fragment implements Color_Setting {
         Player_Setting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getContext(), SettingActivity.class);
+                Intent intent = new Intent(getApplicationContext(), SettingActivity.class);
                 startActivity(intent);
             }
         });
@@ -205,60 +213,56 @@ public class Player_Fragment extends Fragment implements Color_Setting {
             }
         });
 
-
         player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
-            public void onCompletion(MediaPlayer player) {
-                Next.performClick();
+            public void onCompletion(MediaPlayer mp) {
+                mp.reset();
+                position = ((position+1)>AudioList.size()-1)?(0):(position+1);
+                Switching(position);
             }
         });
-        return view;
+
     }
 
-    public void initialization(View view){ //Метод инициализации элементов
-        BottomCardView = view.findViewById(R.id.Player_CardView_Bottom);
-        TopCardView = view.findViewById(R.id.Player_CardView_Top);
-        Player_Setting = view.findViewById(R.id.Player_setting);
-        favourite = view.findViewById(R.id.Favorite);
-        PlayStop = view.findViewById(R.id.PlayStop);
-        NameSong = view.findViewById(R.id.NameSong);
-        Author = view.findViewById(R.id.AuthorName);
-        Back = view.findViewById(R.id.BackButton);
-        Next = view.findViewById(R.id.NextButton);
-        Slider = view.findViewById(R.id.Slider);
-        Max = view.findViewById(R.id.MaxValue);
-        Min = view.findViewById(R.id.text);
+
+    public void initialization(){ //Метод инициализации элементов
+        BottomCardView = findViewById(R.id.Player_CardView_Bottom);
+        TopCardView = findViewById(R.id.Player_CardView_Top);
+        Player_Setting = findViewById(R.id.Player_setting);
+        favourite = findViewById(R.id.Favorite);
+        PlayStop = findViewById(R.id.PlayStop);
+        NameSong = findViewById(R.id.NameSong);
+        Author = findViewById(R.id.AuthorName);
+        Back = findViewById(R.id.BackButton);
+        Next = findViewById(R.id.NextButton);
+        Slider = findViewById(R.id.Slider);
+        Max = findViewById(R.id.MaxValue);
+        Min = findViewById(R.id.text);
     }
 
 
     public void Switching(int pos){ //Метод переключения между песнями
+        if(player != null)   player.release();
         Uri uri = Uri.parse(AudioList.get(pos).getPath());
-        player = MediaPlayer.create(getContext(),uri);
-        NameSong.setText(AudioList.get(pos).getTitle());
-        Author.setText(AudioList.get(pos).getArtist());
-        TotalTime = player.getDuration();
-        player.setLooping(true);
-        player.seekTo(0);
-        Slider.setValueTo(0);
-        Slider.setValueTo(TotalTime);
-        float speed = 1.0f;
-        player.setPlaybackParams(player.getPlaybackParams().setSpeed(speed));
-        Max.setText(createTimeLabel((int)TotalTime));
-        PlayStop.setImageResource(R.drawable.pause);
-        try {
-            FileInputStream fis = new FileInputStream(requireContext().getFilesDir().getPath() + "/Favorite.text");
-            ObjectInputStream ois = new ObjectInputStream(fis);
-            Favorite = (ArrayList<Audio>) ois.readObject();
-            for(Audio audio : Favorite){
-                if(audio.getPath().equals(AudioList.get(position).getPath())) {favourite.setImageResource(R.drawable.favorite_white); break; }
-                else  favourite.setImageResource(R.drawable.not_favorite_white);
+        player = MediaPlayer.create(getApplicationContext(),uri);
+        player.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mp) {
+                NameSong.setText(AudioList.get(pos).getTitle());
+                Author.setText(AudioList.get(pos).getArtist());
+                TotalTime = player.getDuration();
+                player.setLooping(false);
+                player.seekTo(0);
+                Slider.setValueTo(0);
+                Slider.setValueTo(TotalTime);
+                float speed = 1.0f;
+                player.setPlaybackParams(player.getPlaybackParams().setSpeed(speed));
+                Max.setText(createTimeLabel((int)TotalTime));
+                PlayStop.setImageResource(R.drawable.pause);
+                IsFavourite();
+                player.start();
             }
-            ois.close();
-            fis.close();
-        } catch(Exception ex) { ex.printStackTrace();
-            Log.e("Error"," ");
-        }
-        player.start();
+        });
     }
 
     public String createTimeLabel(int time){ //Метод создания нового TextView для пользователя при прослушивании и переключении аудиозаписи
@@ -280,9 +284,25 @@ public class Player_Fragment extends Fragment implements Color_Setting {
         return Favorite;
     }
 
+    public void IsFavourite(){
+        try {
+            FileInputStream fis = new FileInputStream(this.getFilesDir().getPath() + "/Favorite.text");
+            ObjectInputStream ois = new ObjectInputStream(fis);
+            Favorite = (ArrayList<Audio>) ois.readObject();
+            for(Audio audio : Favorite){
+                if(audio.getPath().equals(AudioList.get(position).getPath())) {favourite.setImageResource(R.drawable.favorite_white); break; }
+                else  favourite.setImageResource(R.drawable.not_favorite_white);
+            }
+            ois.close();
+            fis.close();
+        } catch(Exception ex) { ex.printStackTrace();
+            Log.e("Error"," ");
+        }
+    }
+
     public void FileOutput(){
         try {
-            FileOutputStream fos = new FileOutputStream(requireContext().getFilesDir().getPath() + "/Favorite.text");
+            FileOutputStream fos = new FileOutputStream(getApplicationContext().getFilesDir().getPath() + "/Favorite.text");
             ObjectOutputStream oos = new ObjectOutputStream(fos);
             oos.writeObject(Favorite);
             oos.close();
@@ -296,38 +316,38 @@ public class Player_Fragment extends Fragment implements Color_Setting {
         String Basic_color = sharedPreferences.getString("Basic Color", "Black");
         String Additionally_color = sharedPreferences.getString("Additionally Color", "Green");
         if (Additionally_color.equals("Orange")) {
-            Slider.setThumbTintList(ColorStateList.valueOf((ContextCompat.getColor(getContext(), R.color.orange))));
-            Slider.setTrackActiveTintList(ColorStateList.valueOf((ContextCompat.getColor(getContext(), R.color.orange))));
-            Slider.setTrackInactiveTintList(ColorStateList.valueOf((ContextCompat.getColor(getContext(), R.color.red))));
-            TopCardView.setCardBackgroundColor((ContextCompat.getColor(getContext(), R.color.orange)));
-            BottomCardView.setCardBackgroundColor((ContextCompat.getColor(getContext(), R.color.orange)));
-            Player_Setting.setBackgroundColor((ContextCompat.getColor(getContext(), R.color.orange)));
-            PlayStop.setBackgroundColor((ContextCompat.getColor(getContext(), R.color.orange)));
-            Next.setBackgroundColor((ContextCompat.getColor(getContext(), R.color.orange)));
-            Back.setBackgroundColor((ContextCompat.getColor(getContext(), R.color.orange)));
+            Slider.setTrackActiveTintList(ColorStateList.valueOf((ContextCompat.getColor(getApplicationContext(), R.color.orange))));
+            Slider.setTrackInactiveTintList(ColorStateList.valueOf((ContextCompat.getColor(getApplicationContext(), R.color.red))));
+            Slider.setThumbTintList(ColorStateList.valueOf((ContextCompat.getColor(getApplicationContext(), R.color.orange))));
+            BottomCardView.setCardBackgroundColor((ContextCompat.getColor(getApplicationContext(), R.color.orange)));
+            TopCardView.setCardBackgroundColor((ContextCompat.getColor(getApplicationContext(), R.color.orange)));
+            Player_Setting.setBackgroundColor((ContextCompat.getColor(getApplicationContext(), R.color.orange)));
+            PlayStop.setBackgroundColor((ContextCompat.getColor(getApplicationContext(), R.color.orange)));
+            Next.setBackgroundColor((ContextCompat.getColor(getApplicationContext(), R.color.orange)));
+            Back.setBackgroundColor((ContextCompat.getColor(getApplicationContext(), R.color.orange)));
         }
         if (Additionally_color.equals("Red")){
-            Slider.setThumbTintList(ColorStateList.valueOf((ContextCompat.getColor(getContext(), R.color.red))));
-            Slider.setTrackActiveTintList(ColorStateList.valueOf((ContextCompat.getColor(getContext(), R.color.red))));
-            Slider.setTrackInactiveTintList(ColorStateList.valueOf((ContextCompat.getColor(getContext(), R.color.orange))));
-            TopCardView.setCardBackgroundColor((ContextCompat.getColor(getContext(), R.color.red)));
-            BottomCardView.setCardBackgroundColor((ContextCompat.getColor(getContext(), R.color.red)));
-            Player_Setting.setBackgroundColor((ContextCompat.getColor(getContext(), R.color.red)));
-            PlayStop.setBackgroundColor((ContextCompat.getColor(getContext(), R.color.red)));
-            Next.setBackgroundColor((ContextCompat.getColor(getContext(), R.color.red)));
-            Back.setBackgroundColor((ContextCompat.getColor(getContext(), R.color.red)));
+            Slider.setTrackInactiveTintList(ColorStateList.valueOf((ContextCompat.getColor(getApplicationContext(), R.color.orange))));
+            Slider.setTrackActiveTintList(ColorStateList.valueOf((ContextCompat.getColor(getApplicationContext(), R.color.red))));
+            Slider.setThumbTintList(ColorStateList.valueOf((ContextCompat.getColor(getApplicationContext(), R.color.red))));
+            BottomCardView.setCardBackgroundColor((ContextCompat.getColor(getApplicationContext(), R.color.red)));
+            TopCardView.setCardBackgroundColor((ContextCompat.getColor(getApplicationContext(), R.color.red)));
+            Player_Setting.setBackgroundColor((ContextCompat.getColor(getApplicationContext(), R.color.red)));
+            PlayStop.setBackgroundColor((ContextCompat.getColor(getApplicationContext(), R.color.red)));
+            Next.setBackgroundColor((ContextCompat.getColor(getApplicationContext(), R.color.red)));
+            Back.setBackgroundColor((ContextCompat.getColor(getApplicationContext(), R.color.red)));
 
         }
         if (Additionally_color.equals("Green")){
-            Slider.setThumbTintList(ColorStateList.valueOf((ContextCompat.getColor(getContext(), R.color.black_yellow))));
-            Slider.setTrackActiveTintList(ColorStateList.valueOf(ContextCompat.getColor(getContext(), R.color.yellow)));
-            Slider.setTrackInactiveTintList(ColorStateList.valueOf(ContextCompat.getColor(getContext(), R.color.green)));
-            TopCardView.setCardBackgroundColor((ContextCompat.getColor(getContext(), R.color.green)));
-            BottomCardView.setCardBackgroundColor((ContextCompat.getColor(getContext(), R.color.green)));
-            Player_Setting.setBackgroundColor((ContextCompat.getColor(getContext(), R.color.green)));
-            PlayStop.setBackgroundColor((ContextCompat.getColor(getContext(), R.color.green)));
-            Next.setBackgroundColor((ContextCompat.getColor(getContext(), R.color.green)));
-            Back.setBackgroundColor((ContextCompat.getColor(getContext(), R.color.green)));
+            Slider.setThumbTintList(ColorStateList.valueOf((ContextCompat.getColor(getApplicationContext(), R.color.black_yellow))));
+            Slider.setTrackInactiveTintList(ColorStateList.valueOf(ContextCompat.getColor(getApplicationContext(), R.color.green)));
+            Slider.setTrackActiveTintList(ColorStateList.valueOf(ContextCompat.getColor(getApplicationContext(), R.color.yellow)));
+            BottomCardView.setCardBackgroundColor((ContextCompat.getColor(getApplicationContext(), R.color.green)));
+            TopCardView.setCardBackgroundColor((ContextCompat.getColor(getApplicationContext(), R.color.green)));
+            Player_Setting.setBackgroundColor((ContextCompat.getColor(getApplicationContext(), R.color.green)));
+            PlayStop.setBackgroundColor((ContextCompat.getColor(getApplicationContext(), R.color.green)));
+            Next.setBackgroundColor((ContextCompat.getColor(getApplicationContext(), R.color.green)));
+            Back.setBackgroundColor((ContextCompat.getColor(getApplicationContext(), R.color.green)));
         }
     }
 }

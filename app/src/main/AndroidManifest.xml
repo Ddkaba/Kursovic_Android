@@ -3,6 +3,7 @@
     package="com.example.kursovicv21">
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> <!-- Изменение в файловой системе -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" /> <!-- Чтение из файловой системы -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/> <!-- Позволяет получать доступ к информации о сетях -->
     <uses-permission android:name="android.permission.WAKE_LOCK" /> <!-- Разрешение на блокировку пробуждения -->
     <uses-permission android:name="android.permission.INTERNET"/> <!-- Доступ в интернет -->
     <application
@@ -14,6 +15,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.KursovicV21">
         <activity android:name=".SettingActivity">
+        </activity>
+        <activity android:name=".Player_Fragment">
         </activity>
         <activity
             android:name=".MainActivity"
