@@ -38,7 +38,6 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder>{
             super(itemView);
             textView = itemView.findViewById(R.id.Name_file);
             imageView = itemView.findViewById(R.id.imageButton_folder);
-
         }
     }
 
@@ -61,9 +60,12 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder>{
             @SuppressLint("ResourceAsColor")
             @Override
             public void onClick(View v) {
-                holder.itemView.setBackgroundColor(Color.parseColor("#b0b0b0"));
-                holder.imageView.setBackgroundColor(Color.parseColor("#b0b0b0"));
-                holder.textView.setTextColor(R.color.black);
+                if(selectedFile.isFile()){
+                    holder.itemView.setBackgroundColor(Color.parseColor("#b0b0b0"));
+                    holder.imageView.setBackgroundColor(Color.parseColor("#b0b0b0"));
+                    holder.textView.setBackgroundColor(Color.parseColor("#b0b0b0"));
+                    holder.textView.setTextColor(R.color.black);
+                }
                 listener.onFileClicked(selectedFile);
             }
         });

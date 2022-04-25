@@ -21,7 +21,6 @@ import java.util.Locale;
 
 
 public class SettingActivity extends AppCompatActivity implements OnSettingSelectedListener, Color_Setting, Languages_Setting {
-   //ArrayList<ImageView> imageViews = new ArrayList<>();
     ArrayList<Setting> settings = new ArrayList<>();
     ConstraintLayout mConstraintLayout, mSetting_item;
     TextView Name_Setting, Description;
@@ -72,9 +71,6 @@ public class SettingActivity extends AppCompatActivity implements OnSettingSelec
 
     @Override
     public void OnSettingListener(int position, View v, ArrayList<ImageView> arrayList) { //Обработка нажатий на элемент меню настроек
-       /* for (int i = 0;i <= arrayList.size() - 1; i++) {
-            imageViews.add(i,arrayList.get(i));
-        }*/
         PopupMenu popupMenu = new PopupMenu(this, v);
         switch (position) {
             case 0:
@@ -86,8 +82,6 @@ public class SettingActivity extends AppCompatActivity implements OnSettingSelec
                 showLanguagesMenu(popupMenu); //Вывод меню настроек языка
                 break;
             case 2:
-                Information();
-                break;
             case 3:
                 Information();
                 break;

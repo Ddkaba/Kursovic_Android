@@ -1,33 +1,24 @@
 package com.example.kursovicv21;
 
-import static android.content.Context.MODE_PRIVATE;
-
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
-
 import com.google.android.material.slider.LabelFormatter;
 import com.google.android.material.slider.Slider;
 import java.io.FileInputStream;
@@ -35,23 +26,20 @@ import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
-import java.util.concurrent.TimeUnit;
 
 public class Player_Fragment extends AppCompatActivity implements Color_Setting {
-    MediaPlayer player;
-    ArrayList<Audio> AudioList;
+    ImageButton favourite, PlayStop, Next, Back, Player_Setting, Playlist;
     ArrayList<Audio> Favorite = new ArrayList<>();
-    ImageButton favourite, PlayStop, Next, Back, Player_Setting;
+    TextView Max, Min, NameSong, Author, Speed;
     CardView BottomCardView, TopCardView;
     SharedPreferences sharedPreferences;
-    TextView Max, Min, NameSong, Author;
+    ArrayList<Audio> AudioList;
+    float TotalTime, speed;
     Thread updateSlider;
     String name, author;
+    MediaPlayer player;
     Integer position;
-    float TotalTime;
     Slider Slider;
-
-    public Player_Fragment(){}
 
     @Override
     public void onStop() {
@@ -69,7 +57,6 @@ public class Player_Fragment extends AppCompatActivity implements Color_Setting 
         Colors(sharedPreferences);
         super.onResume();
     }
-
 
     @Nullable
     protected void onCreate(Bundle savedInstanceState) {
@@ -131,6 +118,13 @@ public class Player_Fragment extends AppCompatActivity implements Color_Setting 
             @SuppressLint("RestrictedApi")
             @Override
             public void onValueChange(@NonNull com.google.android.material.slider.Slider slider, float value, boolean fromUser) {
+                Slider.setLabelFormatter(new LabelFormatter() {
+                    @NonNull
+                    @Override
+                    public String getFormattedValue(float value) {
+                        return String.valueOf(createTimeLabel(Math.round(value)));
+                    }
+                });
                 if(fromUser){
                     player.seekTo(Math.round(value));
                     Slider.setValue(value);
@@ -196,7 +190,7 @@ public class Player_Fragment extends AppCompatActivity implements Color_Setting 
             public void onClick(View v) {
                 Drawable drawable = favourite.getDrawable();
                 if(drawable.getConstantState().equals(getResources().getDrawable(R.drawable.not_favorite_white).getConstantState())) {
-                    favourite.setImageResource(R.drawable.favorite_white);
+                    favourite.setImageResource(R.drawable.favourite_white);
                     AddMusicFavorite();
                     FileOutput();
                 }
@@ -213,13 +207,23 @@ public class Player_Fragment extends AppCompatActivity implements Color_Setting 
             }
         });
 
-        player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+        Speed.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCompletion(MediaPlayer mp) {
-                mp.reset();
-                position = ((position+1)>AudioList.size()-1)?(0):(position+1);
-                Switching(position);
+            public void onClick(View v) {
+                float This_speed = player.getPlaybackParams().getSpeed();
+                if(This_speed == 1.0) speed = 1.25f;
+                if(This_speed == 1.25) speed = 1.5f;
+                if(This_speed == 1.5) speed = 1.75f;
+                if(This_speed == 1.75) speed = 2.0f;
+                if(This_speed == 2.0) speed = 1.0f;
+                Speed.setText(String.valueOf(speed));
+                player.setPlaybackParams(player.getPlaybackParams().setSpeed(speed));
             }
+        });
+
+        Playlist.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) { onBackPressed(); }
         });
 
     }
@@ -229,6 +233,8 @@ public class Player_Fragment extends AppCompatActivity implements Color_Setting 
         BottomCardView = findViewById(R.id.Player_CardView_Bottom);
         TopCardView = findViewById(R.id.Player_CardView_Top);
         Player_Setting = findViewById(R.id.Player_setting);
+        Playlist = findViewById(R.id.ToPlaylist);
+        Speed = findViewById(R.id.SpeedOfTrack);
         favourite = findViewById(R.id.Favorite);
         PlayStop = findViewById(R.id.PlayStop);
         NameSong = findViewById(R.id.NameSong);
@@ -243,19 +249,20 @@ public class Player_Fragment extends AppCompatActivity implements Color_Setting 
 
     public void Switching(int pos){ //Метод переключения между песнями
         if(player != null)   player.release();
+        Slider.setValueTo(0);
         Uri uri = Uri.parse(AudioList.get(pos).getPath());
         player = MediaPlayer.create(getApplicationContext(),uri);
+        TotalTime = player.getDuration();
+        Slider.setValueTo(TotalTime);
         player.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
             public void onPrepared(MediaPlayer mp) {
                 NameSong.setText(AudioList.get(pos).getTitle());
                 Author.setText(AudioList.get(pos).getArtist());
-                TotalTime = player.getDuration();
                 player.setLooping(false);
                 player.seekTo(0);
-                Slider.setValueTo(0);
-                Slider.setValueTo(TotalTime);
-                float speed = 1.0f;
+                speed = 1.0f;
+                Speed.setText("1.0");
                 player.setPlaybackParams(player.getPlaybackParams().setSpeed(speed));
                 Max.setText(createTimeLabel((int)TotalTime));
                 PlayStop.setImageResource(R.drawable.pause);
@@ -263,6 +270,16 @@ public class Player_Fragment extends AppCompatActivity implements Color_Setting 
                 player.start();
             }
         });
+
+        player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                mp.reset();
+                position = ((position+1)>AudioList.size()-1)?(0):(position+1);
+                Switching(position);
+            }
+        });
+
     }
 
     public String createTimeLabel(int time){ //Метод создания нового TextView для пользователя при прослушивании и переключении аудиозаписи
@@ -290,7 +307,7 @@ public class Player_Fragment extends AppCompatActivity implements Color_Setting 
             ObjectInputStream ois = new ObjectInputStream(fis);
             Favorite = (ArrayList<Audio>) ois.readObject();
             for(Audio audio : Favorite){
-                if(audio.getPath().equals(AudioList.get(position).getPath())) {favourite.setImageResource(R.drawable.favorite_white); break; }
+                if(audio.getPath().equals(AudioList.get(position).getPath())) {favourite.setImageResource(R.drawable.favourite_white); break; }
                 else  favourite.setImageResource(R.drawable.not_favorite_white);
             }
             ois.close();
@@ -313,7 +330,6 @@ public class Player_Fragment extends AppCompatActivity implements Color_Setting 
     }
 
     public void Colors(SharedPreferences sharedPreferences) { //Метод смены цвета приложения
-        String Basic_color = sharedPreferences.getString("Basic Color", "Black");
         String Additionally_color = sharedPreferences.getString("Additionally Color", "Green");
         if (Additionally_color.equals("Orange")) {
             Slider.setTrackActiveTintList(ColorStateList.valueOf((ContextCompat.getColor(getApplicationContext(), R.color.orange))));

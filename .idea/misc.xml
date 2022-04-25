@@ -3,8 +3,12 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/danim/AndroidStudioProjects/KursovicV21/app/src/main/res/drawable/audiotrack.xml" value="0.222" />
+        <entry key="..\:/Users/danim/AndroidStudioProjects/KursovicV21/app/src/main/res/drawable/audiotrack_white.xml" value="0.222" />
         <entry key="..\:/Users/danim/AndroidStudioProjects/KursovicV21/app/src/main/res/drawable/favorite_full_white.xml" value="0.192" />
         <entry key="..\:/Users/danim/AndroidStudioProjects/KursovicV21/app/src/main/res/drawable/favorite_white.xml" value="0.192" />
+        <entry key="..\:/Users/danim/AndroidStudioProjects/KursovicV21/app/src/main/res/drawable/favourite.xml" value="0.222" />
+        <entry key="..\:/Users/danim/AndroidStudioProjects/KursovicV21/app/src/main/res/drawable/ic_baseline_queue_music_24.xml" value="0.222" />
         <entry key="..\:/Users/danim/AndroidStudioProjects/KursovicV21/app/src/main/res/layout/activity_main.xml" value="0.1793478260869565" />
         <entry key="..\:/Users/danim/AndroidStudioProjects/KursovicV21/app/src/main/res/layout/favourite_fragment.xml" value="0.1793478260869565" />
         <entry key="..\:/Users/danim/AndroidStudioProjects/KursovicV21/app/src/main/res/layout/filesystem_fragment.xml" value="0.1793478260869565" />

@@ -26,10 +26,28 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0"
                 android:background="@color/green"
-                app:srcCompat="@drawable/settings_black" />
+                app:srcCompat="@drawable/settings_black"
+                tools:ignore="SpeakableTextPresentCheck" />
+
+
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
+    <ImageButton
+        android:id="@+id/ToPlaylist"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_weight="1"
+        android:background="@color/black_light"
+        app:layout_constraintBottom_toTopOf="@+id/cardView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.948"
+        app:layout_constraintStart_toEndOf="@+id/Favorite"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.813"
+        app:srcCompat="@drawable/playlist_white"
+        tools:ignore="SpeakableTextPresentCheck" />
 
     <ImageButton
         android:id="@+id/Favorite"
@@ -37,15 +55,15 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:background="@color/black_light"
-        android:textColor="@color/white"
         android:src="@drawable/not_favorite_white"
+        android:textColor="@color/white"
         app:layout_constraintBottom_toTopOf="@+id/cardView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.019"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.818">
-    </ImageButton>
+        app:layout_constraintVertical_bias="0.818"
+        tools:ignore="SpeakableTextPresentCheck"></ImageButton>
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView"
@@ -106,7 +124,7 @@
         android:id="@+id/linearLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="40dp"
+        android:layout_marginBottom="35dp"
         app:layout_constraintBottom_toTopOf="@+id/Player_CardView_Bottom"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
@@ -131,7 +149,8 @@
             app:layout_constraintStart_toStartOf="parent"
             app:thumbColor="@color/black_yellow"
             app:trackColorActive="@color/black_yellow"
-            app:trackColorInactive="@color/green" />
+            app:trackColorInactive="@color/green"
+            tools:ignore="SpeakableTextPresentCheck" />
 
         <TextView
             android:id="@+id/MaxValue"
@@ -146,6 +165,22 @@
         </TextView>
     </LinearLayout>
 
+    <TextView
+        android:id="@+id/SpeedOfTrack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
+        android:background="@color/black_light"
+        android:gravity="center"
+        android:paddingBottom="1dp"
+        android:text="1.0"
+        android:textColor="@color/white"
+        android:textSize="15dp"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.079"
+        app:layout_constraintStart_toStartOf="parent">
+    </TextView>
 
     <androidx.cardview.widget.CardView
         android:id="@+id/Player_CardView_Bottom"
@@ -162,27 +197,42 @@
             <ImageButton
                 android:id="@+id/BackButton"
                 android:layout_width="102dp"
-                android:layout_weight="1"
                 android:layout_height="match_parent"
+                android:layout_weight="1"
                 android:background="@color/green"
-                android:src="@drawable/back">
-            </ImageButton>
+                android:src="@drawable/back"
+                tools:ignore="SpeakableTextPresentCheck"></ImageButton>
+
             <ImageButton
                 android:id="@+id/PlayStop"
                 android:layout_width="50dp"
-                android:layout_weight="1"
                 android:layout_height="match_parent"
+                android:layout_weight="1"
                 android:background="@color/green"
-                android:src="@drawable/play">
-            </ImageButton>
+                android:src="@drawable/play"
+                tools:ignore="SpeakableTextPresentCheck"></ImageButton>
+
             <ImageButton
                 android:id="@+id/NextButton"
                 android:layout_width="102dp"
-                android:layout_weight="1"
                 android:layout_height="match_parent"
+                android:layout_weight="1"
                 android:background="@color/green"
-                android:src="@drawable/next">
-            </ImageButton>
+                android:src="@drawable/next"
+                tools:ignore="SpeakableTextPresentCheck"></ImageButton>
         </LinearLayout>
     </androidx.cardview.widget.CardView>
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/cardView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.506"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.813"
+        app:srcCompat="@drawable/timer" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

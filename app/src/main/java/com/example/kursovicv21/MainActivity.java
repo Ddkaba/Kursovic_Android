@@ -8,6 +8,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.SharedMemory;
 import android.view.MenuItem;
@@ -20,10 +21,12 @@ import java.nio.file.FileSystem;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity implements Languages_Setting, Color_Setting{
-    String language;
-    String Basic_color;
-    String Additionally_color;
+    static MediaPlayer mediaPlayer;
     BottomNavigationView navigation;
+    String Additionally_color;
+    String Basic_color;
+    String language;
+
     SharedPreferences sharedPreferences;
 
     @Override
