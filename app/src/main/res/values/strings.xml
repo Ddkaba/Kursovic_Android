@@ -14,8 +14,9 @@
     <string name="Score_audio">Количество песен:</string>
     <string name="Confirmation">Подтверждение</string>
     <string name="Delete_Audio">Вы хотите удалить эту песню?</string>
-    <string name="Add_Audio_Question">Вы хотите добавить эту песню в плейлист?</string>
-    <string name="Add_Audio">Песни добавлены в плейлист</string>
+    <string name="Add_Audio_Question1">Вы хотите добавить</string>
+    <string name="Add_Audio_Question2">в плейлист?</string>
+    <string name="Add_Audio">Песня добавлены в плейлист</string>
     <string name="Necessary_add_audio">Необходимо добавить песню</string>
     <string name="Basic_color">Основной цвет</string>
     <string name="Additionally_color">Дополнительный цвет</string>
@@ -30,5 +31,12 @@
     <string name="Red">Красный</string>
     <string name="Yes">Да</string>
     <string name="No">Нет</string>
+    <string name="URL">URL</string>
+    <string name="NameRadio">Название</string>
+    <string name="AddNewRadio">Добавить свое радио</string>
+    <string name="OK">OK</string>
+    <string name="Cancel">Отмена</string>
     <string name="Internet">Отсутствует подключение к интернету</string>
+    <string name="Function">Функция находится в разработке</string>
+    <string name="Permission">Для дальнейшей работы необходимо разрешение</string>
 </resources>

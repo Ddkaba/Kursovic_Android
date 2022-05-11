@@ -2,11 +2,15 @@ package com.example.kursovicv21;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.media.MediaPlayer;
 import android.os.Bundle;
@@ -21,13 +25,12 @@ import java.nio.file.FileSystem;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity implements Languages_Setting, Color_Setting{
-    static MediaPlayer mediaPlayer;
+    SharedPreferences sharedPreferences;
     BottomNavigationView navigation;
+    static MediaPlayer mediaPlayer;
     String Additionally_color;
     String Basic_color;
     String language;
-
-    SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +42,7 @@ public class MainActivity extends AppCompatActivity implements Languages_Setting
         navigation.setOnItemSelectedListener(Navigation);
         sharedPreferences = getSharedPreferences("Color_setting", MODE_PRIVATE);
         Colors(sharedPreferences);
+        checkPermissionStorage();
         getSupportFragmentManager().beginTransaction().replace(R.id.fl_content, new Playlist_Fragment()).commit();
     }
 
@@ -72,10 +76,13 @@ public class MainActivity extends AppCompatActivity implements Languages_Setting
         }
     };
 
+    private void checkPermissionStorage(){
+        int result = ContextCompat.checkSelfPermission(getBaseContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        if (result != PackageManager.PERMISSION_GRANTED) ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE}, 111);
+    }
+
     private void loadFragment(Fragment fragment) { //Метод загрузки фрагментов
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fl_content, fragment);
-        ft.commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.fl_content, fragment).commit();
     }
 
     public void language() { //Локализация приложения

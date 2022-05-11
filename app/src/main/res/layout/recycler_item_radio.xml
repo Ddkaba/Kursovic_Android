@@ -54,6 +54,7 @@
         android:layout_height="50dp"
         android:layout_marginTop="44dp"
         android:visibility="invisible"
+        android:src="@drawable/audiotrack_white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.576"
         app:layout_constraintStart_toEndOf="@+id/RadioName"

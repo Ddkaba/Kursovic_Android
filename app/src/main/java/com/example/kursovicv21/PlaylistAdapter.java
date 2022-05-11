@@ -39,7 +39,9 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHo
     public void onBindViewHolder(PlaylistAdapter.ViewHolder holder, int position) {
         int pos = position;
         Audio audio = mAudio.get(position);
-        holder.PositionAuthorName.setText(String.valueOf(position+1)+ "." + audio.getArtist() + " - " + audio.getTitle());
+        if(audio.getArtist().equals("")) holder.PositionAuthorName.setText(String.valueOf(position+1)+ ". " + audio.getTitle());
+        else holder.PositionAuthorName.setText(String.valueOf(position+1)+ ". " + audio.getArtist() + " - " + audio.getTitle());
+        holder.PositionAuthorName.setSelected(true);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

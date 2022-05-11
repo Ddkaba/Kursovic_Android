@@ -14,8 +14,9 @@
     <string name="Score_audio">Antal låtar:</string>
     <string name="Confirmation">Bekräftelse</string>
     <string name="Delete_Audio">Vill du ta bort den här låten?</string>
-    <string name="Add_Audio_Question">Vill du lägga till den här låten i din spellista?</string>
-    <string name="Add_Audio">Låtar läggs till i spellistan</string>
+    <string name="Add_Audio_Question1">Vill du lägga till</string>
+    <string name="Add_Audio_Question2">till en spellista?</string>
+    <string name="Add_Audio">Låten har lagts till i spellistan</string>
     <string name="Necessary_add_audio">Du måste lägga till en låt</string>
     <string name="Basic_color">Huvudfärg</string>
     <string name="Additionally_color">Komplementfärg</string>
@@ -30,5 +31,12 @@
     <string name="QR">QR-kod för att kontakta författaren till projektet</string>
     <string name="Yes">Ja</string>
     <string name="No">Nej</string>
+    <string name="URL">URL</string>
+    <string name="NameRadio">Namn</string>
+    <string name="AddNewRadio">Lägg till din radio</string>
     <string name="Internet">Ingen internetanslutning</string>
+    <string name="Function">Funktionen är under utveckling</string>
+    <string name="Permission">Tillstånd krävs för att fortsätta</string>
+    <string name="OK">OK</string>
+    <string name="Cancel">" Avbryt"</string>
 </resources>

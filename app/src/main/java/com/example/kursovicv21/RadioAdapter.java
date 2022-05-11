@@ -15,7 +15,9 @@ import java.util.List;
 
 public class RadioAdapter extends RecyclerView.Adapter<RadioAdapter.ViewHolder> {
     OnRadioSelectedListener listener;
-    ArrayList<ImageView> imageViews = new ArrayList<>();
+    ProgressBar Playing_progressBar;
+    ImageView Playing_imageView;
+    int PlayingPosition = -1;
     public class ViewHolder extends RecyclerView.ViewHolder{
         public TextView RadioName;
         public ImageView RadioImage;
@@ -49,19 +51,38 @@ public class RadioAdapter extends RecyclerView.Adapter<RadioAdapter.ViewHolder> 
         Radio radio = mRadio.get(position);
         ProgressBar progressBar = holder.progressBar;
         ImageView imageView = holder.imageView;
-        holder.itemView.setOnClickListener(new View.OnClickListener() { //Обработка нажатия на элемент списка RecyclerView
-            @Override
-            public void onClick(View v) {
-                listener.clickOnImage(pos, progressBar, imageView);
-            }
-        });
         TextView RadioN = holder.RadioName;
         RadioN.setText(radio.getNameRadio()); //Заполнение элемента нужными данными
         ImageView RadioI = holder.RadioImage;
         RadioI.setImageResource(radio.getPicture()); //Заполнение элемента нужными данными
+        if(PlayingPosition != -1) {
+            if (PlayingPosition == position && Playing_imageView.equals(imageView) && Playing_progressBar.equals(progressBar)) {
+                if (MainActivity.mediaPlayer.isPlaying()) imageView.setVisibility(View.VISIBLE);
+                else {
+                    if(!MainActivity.mediaPlayer.isPlaying() && MainActivity.mediaPlayer != null &&
+                            Radio_Fragment.preparation) progressBar.setVisibility(View.VISIBLE);
+                    else {
+                        progressBar.setVisibility(View.INVISIBLE);
+                        imageView.setVisibility(View.INVISIBLE);
+                    }
+                }
+            }
+            else {
+                progressBar.setVisibility(View.INVISIBLE);
+                imageView.setVisibility(View.INVISIBLE);
+            }
+        }
+        holder.itemView.setOnClickListener(new View.OnClickListener() { //Обработка нажатия на элемент списка RecyclerView
+            @Override
+            public void onClick(View v) {
+                listener.clickOnImage(pos, progressBar, imageView);
+                PlayingPosition = pos;
+                Playing_imageView = imageView;
+                Playing_progressBar = progressBar;
+            }
+        });
     }
 
     @Override
     public int getItemCount() { return  mRadio.size(); } //Получение количества элементов списка
-
 }

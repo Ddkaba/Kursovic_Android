@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.media.MediaMetadataRetriever;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,13 +19,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder>{
     Context context;
-    File[] filesAndFolders;
+    List<File> filesAndFolders;
     OnFileSelectedListener listener;
-    public FileAdapter(Context context, File[] filesAndFolders, OnFileSelectedListener listener){
+    public FileAdapter(Context context, List<File> filesAndFolders, OnFileSelectedListener listener){
         this.context = context;
         this.filesAndFolders = filesAndFolders;
         this.listener = listener;
@@ -49,23 +51,14 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder>{
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        File selectedFile = filesAndFolders[position];
+        File selectedFile = filesAndFolders.get(position);
+        holder.textView.setSelected(true);
         holder.textView.setText(selectedFile.getName());
-        if(selectedFile.isDirectory()){
-            holder.imageView.setImageResource(R.drawable.folder);
-        } else {
-            holder.imageView.setImageResource(R.drawable.file);
-        }
+        if(selectedFile.isDirectory()) holder.imageView.setImageResource(R.drawable.folder);
+        else holder.imageView.setImageResource(R.drawable.file);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @SuppressLint("ResourceAsColor")
             @Override
             public void onClick(View v) {
-                if(selectedFile.isFile()){
-                    holder.itemView.setBackgroundColor(Color.parseColor("#b0b0b0"));
-                    holder.imageView.setBackgroundColor(Color.parseColor("#b0b0b0"));
-                    holder.textView.setBackgroundColor(Color.parseColor("#b0b0b0"));
-                    holder.textView.setTextColor(R.color.black);
-                }
                 listener.onFileClicked(selectedFile);
             }
         });
@@ -73,6 +66,6 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder>{
 
     @Override
     public int getItemCount() {
-        return filesAndFolders.length;
+        return filesAndFolders.size();
     }
 }

@@ -14,8 +14,9 @@
     <string name="Score_audio">Number of songs:</string>
     <string name="Confirmation">Confirmation</string>
     <string name="Delete_Audio">Do you want to delete this song?</string>
-    <string name="Add_Audio_Question">Do you want to add this song to the playlist?</string>
-    <string name="Add_Audio">Songs added to playlist</string>
+    <string name="Add_Audio_Question1">Do you want to add</string>
+    <string name="Add_Audio_Question2">to a playlist?</string>
+    <string name="Add_Audio">Song added to playlist</string>
     <string name="Necessary_add_audio">Need to add a song</string>
     <string name="Basic_color">Basic color</string>
     <string name="Additionally_color">Additionally color</string>
@@ -30,5 +31,12 @@
     <string name="QR">QR code to contact the author of the project</string>
     <string name="Yes">Yes</string>
     <string name="No">No</string>
+    <string name="URL">URL</string>
+    <string name="NameRadio">Name</string>
+    <string name="AddNewRadio">Add your radio</string>
     <string name="Internet">No internet connection</string>
+    <string name="Function">The feature is under development</string>
+    <string name="Permission">Permission is required to proceed</string>
+    <string name="OK">OK</string>
+    <string name="Cancel">Cancel</string>
 </resources>

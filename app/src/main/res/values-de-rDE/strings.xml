@@ -14,8 +14,9 @@
     <string name="Score_audio">Anzahl der Lieder:</string>
     <string name="Confirmation">Bestätigung</string>
     <string name="Delete_Audio">Möchten Sie dieses Lied löschen?</string>
-    <string name="Add_Audio_Question">Möchten Sie dieses Lied zur Playlist hinzufügen?</string>
-    <string name="Add_Audio">Songs zur Wiedergabeliste hinzugefügt</string>
+    <string name="Add_Audio_Question1">Möchten Sie hinzufügen</string>
+    <string name="Add_Audio_Question2">zu einer Wiedergabeliste?</string>
+    <string name="Add_Audio">Song zur Wiedergabeliste hinzugefügt</string>
     <string name="Necessary_add_audio">Muss ein Lied hinzufügen</string>
     <string name="Basic_color">Hauptfarbe</string>
     <string name="Additionally_color">Komplementärfarbe</string>
@@ -30,5 +31,12 @@
     <string name="QR">QR-Code, um den Autor des Projekts zu kontaktieren</string>
     <string name="Yes">Ja</string>
     <string name="No">Nein</string>
+    <string name="URL">URL</string>
+    <string name="NameRadio">Name</string>
+    <string name="AddNewRadio">Fügen Sie Ihr Radio hinzu</string>
     <string name="Internet">Keine Internetverbindung</string>
+    <string name="Function">Die Funktion befindet sich in der Entwicklung</string>
+    <string name="Permission">Zum Fortfahren ist eine Genehmigung erforderlich</string>
+    <string name="OK">OK</string>
+    <string name="Cancel">" Absagen"</string>
 </resources>

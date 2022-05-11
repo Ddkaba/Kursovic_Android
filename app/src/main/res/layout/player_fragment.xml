@@ -38,7 +38,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_weight="1"
         android:background="@color/black_light"
         app:layout_constraintBottom_toTopOf="@+id/cardView"
         app:layout_constraintEnd_toEndOf="parent"
@@ -53,7 +52,6 @@
         android:id="@+id/Favorite"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
         android:background="@color/black_light"
         android:src="@drawable/not_favorite_white"
         android:textColor="@color/white"
@@ -63,7 +61,22 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.818"
-        tools:ignore="SpeakableTextPresentCheck"></ImageButton>
+        tools:ignore="SpeakableTextPresentCheck">
+    </ImageButton>
+
+    <ImageButton
+        android:id="@+id/Timer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/black_light"
+        app:layout_constraintBottom_toTopOf="@+id/cardView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.506"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.813"
+        app:srcCompat="@drawable/timer" />
+
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView"
@@ -92,13 +105,19 @@
 
     <TextView
         android:id="@+id/NameSong"
-        android:layout_width="wrap_content"
+        android:layout_width="200dp"
+        android:gravity="center"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
         android:text="@string/NameMusic"
         android:background="@color/black_light"
         android:textColor="@color/white"
         android:textSize="18dp"
+        android:ellipsize="marquee"
+        android:singleLine="true"
+        android:scrollHorizontally="true"
         app:layout_constraintBottom_toTopOf="@+id/AuthorName"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -107,13 +126,19 @@
 
     <TextView
         android:id="@+id/AuthorName"
-        android:layout_width="wrap_content"
+        android:layout_width="200dp"
+        android:gravity="center"
         android:layout_height="wrap_content"
         android:layout_marginBottom="25dp"
         android:text="@string/Author"
         android:background="@color/black_light"
         android:textColor="@color/white"
         android:textSize="18dp"
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp"
+        android:ellipsize="marquee"
+        android:singleLine="true"
+        android:scrollHorizontally="true"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -144,6 +169,7 @@
             android:id="@+id/Slider"
             android:layout_width="250dp"
             android:layout_height="89dp"
+            android:valueFrom="0"
             app:layout_constraintBottom_toTopOf="@+id/cardView2"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -169,16 +195,16 @@
         android:id="@+id/SpeedOfTrack"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="24dp"
+        android:layout_marginBottom="12dp"
         android:background="@color/black_light"
         android:gravity="center"
         android:paddingBottom="1dp"
         android:text="1.0"
         android:textColor="@color/white"
         android:textSize="15dp"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+        app:layout_constraintBottom_toTopOf="@+id/Player_CardView_Bottom"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.079"
+        app:layout_constraintHorizontal_bias="0.087"
         app:layout_constraintStart_toStartOf="parent">
     </TextView>
 
@@ -201,7 +227,8 @@
                 android:layout_weight="1"
                 android:background="@color/green"
                 android:src="@drawable/back"
-                tools:ignore="SpeakableTextPresentCheck"></ImageButton>
+                tools:ignore="SpeakableTextPresentCheck">
+            </ImageButton>
 
             <ImageButton
                 android:id="@+id/PlayStop"
@@ -210,7 +237,8 @@
                 android:layout_weight="1"
                 android:background="@color/green"
                 android:src="@drawable/play"
-                tools:ignore="SpeakableTextPresentCheck"></ImageButton>
+                tools:ignore="SpeakableTextPresentCheck">
+            </ImageButton>
 
             <ImageButton
                 android:id="@+id/NextButton"
@@ -219,20 +247,10 @@
                 android:layout_weight="1"
                 android:background="@color/green"
                 android:src="@drawable/next"
-                tools:ignore="SpeakableTextPresentCheck"></ImageButton>
+                tools:ignore="SpeakableTextPresentCheck">
+            </ImageButton>
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
-    <ImageView
-        android:id="@+id/imageView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@+id/cardView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.506"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.813"
-        app:srcCompat="@drawable/timer" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

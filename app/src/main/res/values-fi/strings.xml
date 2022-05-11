@@ -14,8 +14,9 @@
     <string name="Score_audio">Kappaleiden määrä:</string>
     <string name="Confirmation">Vahvistus</string>
     <string name="Delete_Audio">Haluatko poistaa tämän kappaleen?</string>
-    <string name="Add_Audio_Question">Haluatko lisätä tämän kappaleen soittolistaan?</string>
-    <string name="Add_Audio">Kappaleet lisätty soittolistaan</string>
+    <string name="Add_Audio_Question1">Haluatko lisätä</string>
+    <string name="Add_Audio_Question2">soittolistalle?</string>
+    <string name="Add_Audio">Kappale lisätty soittolistaan</string>
     <string name="Necessary_add_audio">Pitää lisätä kappale</string>
     <string name="Basic_color">Pääväri</string>
     <string name="Additionally_color">Täydentävä väri</string>
@@ -30,5 +31,12 @@
     <string name="QR">QR-koodi, jolla voit ottaa yhteyttä projektin tekijään</string>
     <string name="Yes">Joo</string>
     <string name="No">Ei</string>
+    <string name="URL">URL</string>
+    <string name="NameRadio">Nimi</string>
+    <string name="AddNewRadio">Lisää radiosi</string>
     <string name="Internet">Ei Internet-yhteyttä</string>
+    <string name="Function">Ominaisuus on kehitteillä</string>
+    <string name="Permission">Jatkamiseen tarvitaan lupa</string>
+    <string name="OK">OK</string>
+    <string name="Cancel">" Peruuttaa"</string>
 </resources>

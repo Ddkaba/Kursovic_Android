@@ -1,15 +1,19 @@
 package com.example.kursovicv21;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -34,8 +38,8 @@ public class SettingActivity extends AppCompatActivity implements OnSettingSelec
         super.onCreate(savedInstanceState);
         setContentView(R.layout.setting);
         getSupportActionBar().hide();  //Метод скрывающий верную планку приложения
-        Adding();
-        initialization();
+        Adding(); //Метод добавления данных в массив
+        initialization(); //Метод инициализации элементов интерфейса
         Color = getSharedPreferences("Color_setting", MODE_PRIVATE); //Получение настроек цвета
         Colors(Color);
         SettingAdapter settingAdapter = new SettingAdapter(settings, this);
@@ -56,73 +60,64 @@ public class SettingActivity extends AppCompatActivity implements OnSettingSelec
         mSetting_item = findViewById(R.id.Setting_ConstrainLayout_item);
         Setting_CardView = findViewById(R.id.Setting_cardView);
         Name_Setting = findViewById(R.id.Name_setting);
-        Description = findViewById(R.id.Description);
         Back = findViewById(R.id.Back_ImageView);
-        QR = findViewById(R.id.QR);
     }
-
 
     public void Adding() { //Добавление новых элементов в список радиостанций
         settings.add(new Setting(getResources().getString(R.string.Control_Color), R.drawable.palette_white));
         settings.add(new Setting(getResources().getString(R.string.Language), R.drawable.language_white));
-        //settings.add(new Setting(getResources().getString(R.string.Scale), R.drawable.zoom_in_white));
         settings.add(new Setting(getResources().getString(R.string.Info), R.drawable.info_white));
     }
 
     @Override
     public void OnSettingListener(int position, View v, ArrayList<ImageView> arrayList) { //Обработка нажатий на элемент меню настроек
-        PopupMenu popupMenu = new PopupMenu(this, v);
         switch (position) {
             case 0:
-                popupMenu.inflate(R.menu.color_menu);
-                showColorMenu(popupMenu); //Вывод меню настроек цвета
+                showColorMenu(); //Вывод меню настроек цвета
                 break;
             case 1:
-                popupMenu.inflate(R.menu.languages_menu);
-                showLanguagesMenu(popupMenu); //Вывод меню настроек языка
+                showLanguagesMenu(); //Вывод меню настроек языка
                 break;
             case 2:
-            case 3:
-                Information();
+                Information(); //Вывод информации про проект
+                break;
+            default:
                 break;
         }
     }
 
-
-    private void showLanguagesMenu(PopupMenu popupMenu) { //Метод вызова всплывающего меню управления языками
+    private void showLanguagesMenu() { //Метод вызова всплывающего меню управления языками
+        CharSequence[] Languages_items = {"Русский", "English", "Deutsch", "Suomalainen", "Svenska"};
         setting = getSharedPreferences("Languages_setting", MODE_PRIVATE); //Получение настроек языка
         SharedPreferences.Editor editor = setting.edit(); //Разрешение на изменение настроек языка
-        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.Russian:
-                        editor.putString("language","ru"); editor.apply(); language();
-                        return true;
-                    case R.id.English:
-                        editor.putString("language","en"); editor.apply(); language();
-                        return true;
-                    case R.id.German:
-                        editor.putString("language","de"); editor.apply(); language();
-                        return true;
-                    case R.id.Finnish:
-                        editor.putString("language","fi"); editor.apply(); language();
-                        return true;
-                    case R.id.Swedish:
-                        editor.putString("language","sv"); editor.apply(); language();
-                        return true;
-                    default:
-                        language();
-                        return false;
-                }
-            }
-        });
-        popupMenu.setOnDismissListener(new PopupMenu.OnDismissListener() {
-            @Override
-            public void onDismiss(PopupMenu menu) { //Метод убирающий меню при нажатии на любую часть меню, кроме самого меню
-            }
-        });
-        popupMenu.show();
+        AlertDialog.Builder  builder = new AlertDialog.Builder(this)
+                .setTitle(getResources().getString(R.string.Language))
+                .setItems(Languages_items, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch (which){
+                            case 0:
+                                editor.putString("language","ru"); editor.apply(); language();
+                                break;
+                            case 1:
+                                editor.putString("language","en"); editor.apply(); language();
+                                break;
+                            case 2:
+                                editor.putString("language","de"); editor.apply(); language();
+                                break;
+                            case 3:
+                                editor.putString("language","fi"); editor.apply(); language();
+                                break;
+                            case 4:
+                                editor.putString("language","sv"); editor.apply(); language();
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
     }
 
     public void language(){ //Метод обновления локализации приложения
@@ -135,46 +130,35 @@ public class SettingActivity extends AppCompatActivity implements OnSettingSelec
         recreate(); //Пересоздание активности
     }
 
-    private void showColorMenu(PopupMenu popupMenu) { //Метод вызова всплывающего меню управления цветами
+    private void showColorMenu() { //Метод вызова всплывающего меню управления цветами
+        CharSequence[] Color_items = {getResources().getString(R.string.Green), getResources().getString(R.string.Orange),
+                getResources().getString(R.string.Red)};
         SharedPreferences.Editor editor = Color.edit(); //Разрешение на изменение настроек цвета
-        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.White_Color:
-                        Toast toast = Toast.makeText(getBaseContext(), "Функция находится в разработке", Toast.LENGTH_LONG);
-                        toast.show();
-                        editor.putString("Basic Color","White"); editor.apply(); Colors(Color);
-                        return true;
-                    case R.id.Black_Color:
-                        Toast toast1 = Toast.makeText(getBaseContext(), "Функция находится в разработке", Toast.LENGTH_LONG);
-                        toast1.show();
-                        editor.putString("Basic Color","Black"); editor.apply(); Colors(Color);
-                        return true;
-                    case R.id.Green_Color:
-                        editor.putString("Additionally Color","Green"); editor.apply(); Colors(Color);
-                        return true;
-                    case R.id.Orange_Color:
-                        editor.putString("Additionally Color","Orange"); editor.apply(); Colors(Color);
-                        return true;
-                    case R.id.Red_Color:
-                        editor.putString("Additionally Color","Red"); editor.apply(); Colors(Color);
-                        return true;
-                    default:
-                        return false;
-                }
-            }
-        });
-        popupMenu.setOnDismissListener(new PopupMenu.OnDismissListener() {
-            @Override
-            public void onDismiss(PopupMenu menu) { //Метод убирающий меню при нажатии на любую часть меню, кроме самого меню
-            }
-        });
-        popupMenu.show();
+        AlertDialog.Builder  builder = new AlertDialog.Builder(this)
+                .setTitle(getResources().getString(R.string.Control_Color))
+                .setItems(Color_items, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch (which){
+                            case 0:
+                                editor.putString("Additionally Color","Green"); editor.apply(); Colors(Color);
+                                break;
+                            case 1:
+                                editor.putString("Additionally Color","Orange"); editor.apply(); Colors(Color);
+                                break;
+                            case 2:
+                                editor.putString("Additionally Color","Red"); editor.apply(); Colors(Color);
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
     }
 
     public void Colors(SharedPreferences sharedPreferences){ //Метод смены цвета приложения
-        String Basic_color = sharedPreferences.getString("Basic Color", "Black");
         String Additionally_color = sharedPreferences.getString("Additionally Color", "Green");
         if(Additionally_color.equals("Orange")) Setting_CardView.setCardBackgroundColor((ContextCompat.getColor(this, R.color.orange)));
         if(Additionally_color.equals("Red")) Setting_CardView.setCardBackgroundColor((ContextCompat.getColor(this, R.color.red)));
@@ -182,25 +166,24 @@ public class SettingActivity extends AppCompatActivity implements OnSettingSelec
     }
 
     public void Information(){ //Метод для вывода информации о проекте
-        QR.setImageResource(R.drawable.qr);
+        LayoutInflater inflater = getLayoutInflater();
+        View customView = inflater.inflate(R.layout.information_dialog, null);
+        Description = customView.findViewById(R.id.Description);
+        QR = customView.findViewById(R.id.QR);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this)
+                .setTitle(getResources().getString(R.string.Info))
+                .setIcon(R.drawable.info)
+                .setView(customView)
+                .setPositiveButton(getResources().getString(R.string.OK), null);
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
         Description.setText(getResources().getString(R.string.Music_Player) + "\n" + getResources().getString(R.string.Customer)
                 + "\n" + getResources().getString(R.string.Executor) + "\n" + "<-" + getResources().getString(R.string.QR));
-        Description.setVisibility(View.VISIBLE);
-        QR.setVisibility(View.VISIBLE);
         QR.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 QR.setImageResource(R.drawable.qr1);
             }
         });
-        new CountDownTimer(30000, 1000){
-            @Override
-            public void onTick(long millisUntilFinished) { }
-            @Override
-            public void onFinish() {
-                Description.setVisibility(View.INVISIBLE);
-                QR.setVisibility(View.INVISIBLE);
-            }
-        }.start();
     }
 }
