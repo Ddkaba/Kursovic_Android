@@ -19,7 +19,7 @@
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name=".Player_Fragment"
+            android:name=".Player_Activity"
             android:screenOrientation="portrait">
         </activity>
         <activity

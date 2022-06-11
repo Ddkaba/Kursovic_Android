@@ -5,15 +5,10 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.PopupMenu;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -46,7 +41,7 @@ public class SettingActivity extends AppCompatActivity implements OnSettingSelec
         recyclerView.setAdapter(settingAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        Back.setOnClickListener(new View.OnClickListener() {
+        Back.setOnClickListener(new View.OnClickListener() { //Метод обработки нажатия на кнопку назад, возвращает обратно к плейлистам
             @Override
             public void onClick(View v) { //Метод обработки нажатия на кнопку назад, возвращает обратно к плейлистам
                 onBackPressed();
@@ -54,7 +49,7 @@ public class SettingActivity extends AppCompatActivity implements OnSettingSelec
         });
     }
 
-    public void initialization(){ //Метод инициализации элементов
+    public void initialization(){ //Метод инициализации элементов интерфейса
         recyclerView = findViewById(R.id.Setting_recyclerView);
         mConstraintLayout = findViewById(R.id.Setting_ConstrainLayout);
         mSetting_item = findViewById(R.id.Setting_ConstrainLayout_item);
@@ -63,14 +58,14 @@ public class SettingActivity extends AppCompatActivity implements OnSettingSelec
         Back = findViewById(R.id.Back_ImageView);
     }
 
-    public void Adding() { //Добавление новых элементов в список радиостанций
+    public void Adding() { //Метод добавления пунктов в список настроек
         settings.add(new Setting(getResources().getString(R.string.Control_Color), R.drawable.palette_white));
         settings.add(new Setting(getResources().getString(R.string.Language), R.drawable.language_white));
         settings.add(new Setting(getResources().getString(R.string.Info), R.drawable.info_white));
     }
 
     @Override
-    public void OnSettingListener(int position, View v, ArrayList<ImageView> arrayList) { //Обработка нажатий на элемент меню настроек
+    public void OnSettingListener(int position, View v, ArrayList<ImageView> arrayList) { //Выбор пункта меню настроек
         switch (position) {
             case 0:
                 showColorMenu(); //Вывод меню настроек цвета
@@ -158,7 +153,7 @@ public class SettingActivity extends AppCompatActivity implements OnSettingSelec
         alertDialog.show();
     }
 
-    public void Colors(SharedPreferences sharedPreferences){ //Метод смены цвета приложения
+    public void Colors(SharedPreferences sharedPreferences){ //Метод смены цвета интерфейса
         String Additionally_color = sharedPreferences.getString("Additionally Color", "Green");
         if(Additionally_color.equals("Orange")) Setting_CardView.setCardBackgroundColor((ContextCompat.getColor(this, R.color.orange)));
         if(Additionally_color.equals("Red")) Setting_CardView.setCardBackgroundColor((ContextCompat.getColor(this, R.color.red)));

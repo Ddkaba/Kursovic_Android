@@ -169,7 +169,6 @@
             android:id="@+id/Slider"
             android:layout_width="250dp"
             android:layout_height="89dp"
-            android:valueFrom="0"
             app:layout_constraintBottom_toTopOf="@+id/cardView2"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

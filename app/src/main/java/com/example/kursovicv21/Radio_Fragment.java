@@ -13,7 +13,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -28,11 +27,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.net.MalformedURLException;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Radio_Fragment extends Fragment implements OnRadioSelectedListener, Color_Setting {
@@ -72,7 +67,7 @@ public class Radio_Fragment extends Fragment implements OnRadioSelectedListener,
         }
         else Toast.makeText(getContext(),R.string.Internet,Toast.LENGTH_LONG).show();
 
-        AddRadio.setOnClickListener(new View.OnClickListener() {
+        AddRadio.setOnClickListener(new View.OnClickListener() { //Метод для добавления новой радиостанции
             @Override
             public void onClick(View v) {
                 LayoutInflater inflater = getLayoutInflater();
@@ -87,7 +82,7 @@ public class Radio_Fragment extends Fragment implements OnRadioSelectedListener,
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 if(NewNameRadio.getText().toString().length() != 0 && NewURLRadio.getText().toString().length() != 0){
-                                    String URL_REGEX = "^((https?|ftp)://|(www|ftp)\\.)?[a-z0-9-]+(\\.[a-z0-9-]+)+([/?].*)?$";
+                                    String URL_REGEX = "^((https|http)://)[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]";
                                     if(!Pattern.compile(URL_REGEX).matcher(NewURLRadio.getText().toString()).find())
                                         Toast.makeText(getContext(), "Это не ссылка", Toast.LENGTH_LONG).show();
                                     else{
@@ -119,7 +114,7 @@ public class Radio_Fragment extends Fragment implements OnRadioSelectedListener,
     }
 
     @Override
-    public void clickOnImage(int position, ProgressBar myProgressBar, ImageView myImage) {//Обработка нажатия на элемент списка радио
+    public void clickOnImage(int position, ProgressBar myProgressBar, ImageView myImage) {//Загрузка и воспроизведение выбранной радиостанции
         if(now_position != position){ //Нажатие было произведено на тот же элемент или нет
             if(back_position != -1) { //Скрытие всех элементов
                 SupportProgressBar.setVisibility(View.INVISIBLE);
@@ -181,19 +176,19 @@ public class Radio_Fragment extends Fragment implements OnRadioSelectedListener,
         return false;
     }
 
-    public void StopRelease(){
+    public void StopRelease(){ //Метод остановки воспроизведения
         if(MainActivity.mediaPlayer != null && MainActivity.mediaPlayer.isPlaying())
             if(!isThis) MainActivity.mediaPlayer.stop();
     }
 
-    public void Colors(SharedPreferences sharedPreferences){ //Метод смены цвета приложения
+    public void Colors(SharedPreferences sharedPreferences){ //Метод смены цвета интерфейса
         String Additionally_color = sharedPreferences.getString("Additionally Color", "Green");
         if(Additionally_color.equals("Orange")) RadioView.setCardBackgroundColor((ContextCompat.getColor(getContext(), R.color.orange)));
         if(Additionally_color.equals("Red")) RadioView.setCardBackgroundColor((ContextCompat.getColor(getContext(), R.color.red)));
         if(Additionally_color.equals("Green")) RadioView.setCardBackgroundColor((ContextCompat.getColor(getContext(), R.color.green)));
     }
 
-    public void ReadingRadio(){ //Функция чтения из файла списка радио
+    public void ReadingRadio(){ //Метод чтения из файла списка радио
         try {
             FileInputStream fis = new FileInputStream(requireContext().getFilesDir().getPath() + "/Radio.text");
             ObjectInputStream ois = new ObjectInputStream(fis);
@@ -202,7 +197,7 @@ public class Radio_Fragment extends Fragment implements OnRadioSelectedListener,
         } catch(Exception ex) { ex.printStackTrace(); }
     }
 
-    public void RecordingRadio(){ //Функция записи в файла списка радио
+    public void RecordingRadio(){ //Метод записи в файл списка радио
         try {
             FileOutputStream fos = new FileOutputStream(requireContext().getFilesDir().getPath() + "/Radio.text");
             ObjectOutputStream oos = new ObjectOutputStream(fos);

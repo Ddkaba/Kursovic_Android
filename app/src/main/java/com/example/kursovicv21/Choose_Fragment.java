@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,7 +36,7 @@ public class Choose_Fragment extends Fragment implements OnAudioSelectedListener
         RecyclerView recyclerView = view.findViewById(R.id.recyclerView_favorite);
         setting.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v) { //Метод для перехода в меню настроек
                 Intent intent = new Intent(getActivity().getBaseContext(), SettingActivity.class);
                 startActivity(intent);
 
@@ -63,8 +62,8 @@ public class Choose_Fragment extends Fragment implements OnAudioSelectedListener
     }
 
     @Override
-    public void onAudioClicked(int position) { //Метод обработки нажатия на элемент списка избранных песен
-        Intent intent = new Intent(getContext(), Player_Fragment.class);
+    public void onAudioClicked(int position) { //Воспроизведение избранной аудиозаписи
+        Intent intent = new Intent(getContext(), Player_Activity.class);
         intent.putExtra("pos",position);
         intent.putExtra("title",Favorite.get(position).getTitle());
         intent.putExtra("author",Favorite.get(position).getArtist());
@@ -74,17 +73,17 @@ public class Choose_Fragment extends Fragment implements OnAudioSelectedListener
     }
 
     @Override
-    public void onAudioLongClicked(int position) { //Метод обработки удержания на элемент списка избранных песен
+    public void onAudioLongClicked(int position) { //Метод для подтверждения удаления избранной аудиозаписи
         AlertDialog.Builder  builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(getResources().getString(R.string.Confirmation));
         builder.setMessage(getResources().getString(R.string.Delete_Audio));
         builder.setPositiveButton(getResources().getString(R.string.No), new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) { }
+            public void onClick(DialogInterface dialog, int which) { } //Обработка нажатия на кнопку Нет
         });
         builder.setNegativeButton(getResources().getString(R.string.Yes), new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
+            public void onClick(DialogInterface dialog, int which) { //Обработка нажатия на кнопку Да
                 Favorite.remove(position);
                 try {
                     FileOutputStream fos = new FileOutputStream(requireContext().getFilesDir().getPath() + "/Favorite.text");

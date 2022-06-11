@@ -23,5 +23,4 @@
         app:itemTextColor="@color/black"
         android:layout_gravity="bottom"
         app:menu="@menu/main_menu" />
-
 </LinearLayout>

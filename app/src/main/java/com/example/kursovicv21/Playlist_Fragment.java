@@ -3,16 +3,12 @@ package com.example.kursovicv21;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -55,7 +51,7 @@ public class Playlist_Fragment extends Fragment implements OnAudioSelectedListen
         return view;
     }
 
-    public void Reading(){ //Функция чтения из файла списка аудиозаписей
+    public void Reading(){ //Считывает из файла список аудиозаписей
         try {
             FileInputStream fis = new FileInputStream(requireContext().getFilesDir().getPath() + "/Audio.text");
             ObjectInputStream ois = new ObjectInputStream(fis);
@@ -65,8 +61,8 @@ public class Playlist_Fragment extends Fragment implements OnAudioSelectedListen
     }
 
     @Override
-    public void onAudioClicked(int position) { //Обработка нажатия на элемент списка аудиозаписей
-        Intent intent = new Intent(getContext(), Player_Fragment.class);
+    public void onAudioClicked(int position) { //Воспроизведение аудиозаписи
+        Intent intent = new Intent(getContext(), Player_Activity.class);
         intent.putExtra("pos",position);
         intent.putExtra("Audio", AudioList);
         intent.putExtra("title",AudioList.get(position).getTitle());
@@ -76,17 +72,17 @@ public class Playlist_Fragment extends Fragment implements OnAudioSelectedListen
     }
 
     @Override
-    public void onAudioLongClicked(int position) { //Обработка долгого нажатия на элемент списка аудиозаписей
+    public void onAudioLongClicked(int position) { //Подтверждение удаления записи
         AlertDialog.Builder  builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(getResources().getString(R.string.Confirmation));
         builder.setMessage(getResources().getString(R.string.Delete_Audio));
         builder.setPositiveButton(getResources().getString(R.string.No), new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) { }
+            public void onClick(DialogInterface dialog, int which) { } //Обработка нажатия на кнопку Нет
         });
         builder.setNegativeButton(getResources().getString(R.string.Yes), new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
+            public void onClick(DialogInterface dialog, int which) { //Обработка нажатия на кнопку Да
                 AudioList.remove(position);
                 try {
                     FileOutputStream fos = new FileOutputStream(requireContext().getFilesDir().getPath() + "/Audio.text");

@@ -1,35 +1,21 @@
 package com.example.kursovicv21;
 
-import static android.content.Context.MODE_PRIVATE;
-
 import android.Manifest;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.media.MediaMetadataRetriever;
 import android.os.Bundle;
 import android.os.Environment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.Toast;
-
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.cardview.widget.CardView;
-import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -77,7 +63,7 @@ public class FileSystem_Fragment extends Fragment implements OnFileSelectedListe
     }
 
     @Override
-    public void onFileClicked(File file) {
+    public void onFileClicked(File file) { //Переход в выбранную папку при нажатии на папку или подтверждение добавления записи при нажатии на файл MP3
         if(file.isDirectory()){
             Bundle bundle = new Bundle();
             bundle.putString("path",file.getAbsolutePath());
@@ -104,7 +90,7 @@ public class FileSystem_Fragment extends Fragment implements OnFileSelectedListe
         }
     }
 
-    public void AddNewAudio(String path, String Name){
+    public void AddNewAudio(String path, String Name){  //Добавление новых аудиофайлов в плейлист
         try {
             FileInputStream fis = new FileInputStream(requireContext().getFilesDir().getPath() + "/Audio.text");
             ObjectInputStream ois = new ObjectInputStream(fis);
@@ -129,5 +115,4 @@ public class FileSystem_Fragment extends Fragment implements OnFileSelectedListe
             Toast.makeText(getContext(), getResources().getString(R.string.Add_Audio), Toast.LENGTH_SHORT).show();
         } catch(Exception ex) { ex.printStackTrace(); }
     }
-
 }

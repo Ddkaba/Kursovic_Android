@@ -8,7 +8,7 @@ public class Setting {
         NameSetting = nameSetting;
         ImageSetting = imageSetting;
     }
-    //Геттеры и Сеттеры
+    //Получение и изменение информации в объектах
     public String getNameSetting() { return NameSetting; }
     public int getImageSetting() { return ImageSetting; }
     public void setNameSetting(String nameSetting) { NameSetting = nameSetting; }

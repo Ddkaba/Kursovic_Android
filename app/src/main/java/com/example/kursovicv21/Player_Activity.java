@@ -18,14 +18,12 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.TimePicker;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.GestureDetectorCompat;
-
 import com.google.android.material.slider.LabelFormatter;
 import com.google.android.material.slider.Slider;
 import java.io.FileInputStream;
@@ -34,7 +32,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
-public class Player_Fragment extends AppCompatActivity implements Color_Setting, TimePickerDialog.OnTimeSetListener, GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener {
+public class Player_Activity extends AppCompatActivity implements Color_Setting, TimePickerDialog.OnTimeSetListener, GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener {
     private static final String TAG = "MyActivity";
     public static final int SWIPE = 100;
     private GestureDetectorCompat gestureDetectorCompat;
@@ -60,42 +58,37 @@ public class Player_Fragment extends AppCompatActivity implements Color_Setting,
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getSupportActionBar().hide();
-        setContentView(R.layout.player_fragment);
+        setContentView(R.layout.player);
         initialization();
         Slider.setValue(0);
-        Slider.setValueTo(1);
         NameSong.setSelected(true);
         Author.setSelected(true);
         gestureDetectorCompat = new GestureDetectorCompat(this, this);
         sharedPreferences =  this.getSharedPreferences("Color_setting", MODE_PRIVATE);
         Colors(sharedPreferences);
-        if(MainActivity.mediaPlayer == null || MainActivity.mediaPlayer.isPlaying()){
-            try{
-                AudioList = getIntent().getParcelableArrayListExtra("Audio");
-                name = getIntent().getStringExtra("title");
-                author = getIntent().getStringExtra("author");
-                position = getIntent().getIntExtra("pos", 0);
-                if(MainActivity.mediaPlayer != null) {
-                    MainActivity.mediaPlayer.stop();
-                }
-                Switching(position);
-            }catch (Exception e){ e.printStackTrace(); }
-        }
+        try{
+            AudioList = getIntent().getParcelableArrayListExtra("Audio");
+            name = getIntent().getStringExtra("title");
+            author = getIntent().getStringExtra("author");
+            position = getIntent().getIntExtra("pos", 0);
+            Switching(position);
+        }catch (Exception e){ e.printStackTrace(); }
 
-        updateSlider = new Thread(){
+
+        updateSlider = new Thread(){ //Создание нового потока для обновления слидера
             @Override
-            public void run(){
-                int currentposition = 0;
-                while(currentposition<TotalTime){
+            public void run(){ //Создание нового потока для обновления слайдера
+                float current_position = 0;
+                while(current_position<TotalTime){
                     try{
                         sleep(1000);
-                        currentposition = MainActivity.mediaPlayer.getCurrentPosition();
+                        current_position = MainActivity.mediaPlayer.getCurrentPosition();
                         Handler handler = new Handler(getApplicationContext().getMainLooper());
-                        int Currentposition = currentposition;
+                        float Current_position = current_position;
                         handler.post(new Runnable() {
                             @Override
                             public void run() {
-                                Slider.setValue(Currentposition);
+                                Slider.setValue(Current_position);
                             }
                         } );
                     }
@@ -108,7 +101,7 @@ public class Player_Fragment extends AppCompatActivity implements Color_Setting,
         Slider.setValueTo(TotalTime);
         updateSlider.start();
 
-        Slider.addOnSliderTouchListener(new Slider.OnSliderTouchListener() {
+        Slider.addOnSliderTouchListener(new Slider.OnSliderTouchListener() {  //Метод определяющий прикосновение к слайдеру
             @SuppressLint("RestrictedApi")
             @Override
             public void onStartTrackingTouch(@NonNull com.google.android.material.slider.Slider slider) { }
@@ -117,7 +110,7 @@ public class Player_Fragment extends AppCompatActivity implements Color_Setting,
             public void onStopTrackingTouch(@NonNull com.google.android.material.slider.Slider slider) { }
         });
 
-        Slider.addOnChangeListener(new Slider.OnChangeListener() {
+        Slider.addOnChangeListener(new Slider.OnChangeListener() { //Метод перемотки аудиозаписи и смены значения слайдера
             @SuppressLint("RestrictedApi")
             @Override
             public void onValueChange(@NonNull com.google.android.material.slider.Slider slider, float value, boolean fromUser) {
@@ -137,7 +130,7 @@ public class Player_Fragment extends AppCompatActivity implements Color_Setting,
 
         final Handler handler = new Handler();
         final int delay = 1000;
-        handler.postDelayed(new Runnable() {
+        handler.postDelayed(new Runnable() { //Handler для обновления TextView при прослушивании
             @Override
             public void run() {
                 String currentTime = createTimeLabel(MainActivity.mediaPlayer.getCurrentPosition());
@@ -146,14 +139,14 @@ public class Player_Fragment extends AppCompatActivity implements Color_Setting,
             }
         }, delay);
 
-        PlayStop.setOnClickListener(new View.OnClickListener() {
+        PlayStop.setOnClickListener(new View.OnClickListener() { //Метод остановки или воспроизведение прослушивания при нажатии на кнопку
             @Override
             public void onClick(View v) {
                 SwitchingInterface();
             }
         });
 
-        Back.setOnClickListener(new View.OnClickListener() {
+        Back.setOnClickListener(new View.OnClickListener() { //Метод включения прошлой аудиозаписи
             @Override
             public void onClick(View v) {
                 MainActivity.mediaPlayer.stop();
@@ -161,7 +154,7 @@ public class Player_Fragment extends AppCompatActivity implements Color_Setting,
             }
         });
 
-        Next.setOnClickListener(new View.OnClickListener() {
+        Next.setOnClickListener(new View.OnClickListener() { //Метод включения следующей аудиозаписи
             @Override
             public void onClick(View v) {
                 MainActivity.mediaPlayer.stop();
@@ -169,7 +162,7 @@ public class Player_Fragment extends AppCompatActivity implements Color_Setting,
             }
         });
 
-        Player_Setting.setOnClickListener(new View.OnClickListener() {
+        Player_Setting.setOnClickListener(new View.OnClickListener() { //Метод для перехода в меню настроек
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), SettingActivity.class);
@@ -177,7 +170,7 @@ public class Player_Fragment extends AppCompatActivity implements Color_Setting,
             }
         });
 
-        favourite.setOnClickListener(new View.OnClickListener() {
+        favourite.setOnClickListener(new View.OnClickListener() { //Метод для добавления или удаления аудиозаписи в плейлист избранных записей
             @Override
             public void onClick(View v) {
                 Drawable drawable = favourite.getDrawable();
@@ -198,7 +191,7 @@ public class Player_Fragment extends AppCompatActivity implements Color_Setting,
             }
         });
 
-        Speed.setOnClickListener(new View.OnClickListener() {
+        Speed.setOnClickListener(new View.OnClickListener() { //Метод смены скорости прослушивания
             @Override
             public void onClick(View v) {
                 float This_speed = MainActivity.mediaPlayer.getPlaybackParams().getSpeed();
@@ -212,14 +205,14 @@ public class Player_Fragment extends AppCompatActivity implements Color_Setting,
             }
         });
 
-        Timer.setOnClickListener(new View.OnClickListener() {
+        Timer.setOnClickListener(new View.OnClickListener() { //Метод запуска таймера сна
             @Override
             public void onClick(View v) {
-               new TimePickerDialog(Player_Fragment.this, (TimePickerDialog.OnTimeSetListener) Player_Fragment.this, 0 , 0, true).show();
+               new TimePickerDialog(Player_Activity.this, (TimePickerDialog.OnTimeSetListener) Player_Activity.this, 0 , 0, true).show();
             }
         });
 
-        Playlist.setOnClickListener(new View.OnClickListener() {
+        Playlist.setOnClickListener(new View.OnClickListener() { //Метод для перехода в плейлист
             @Override
             public void onClick(View v) { onBackPressed(); }
         });
@@ -227,7 +220,7 @@ public class Player_Fragment extends AppCompatActivity implements Color_Setting,
     }
 
     @Override
-    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+    public void onTimeSet(TimePicker view, int hourOfDay, int minute) { //Метод для работы таймера сна
         int TimeHour = hourOfDay*60*60*1000;
         int TimeMinutes = minute*60*1000;
         Timer.setImageResource(R.drawable.timer_grey);
@@ -263,7 +256,7 @@ public class Player_Fragment extends AppCompatActivity implements Color_Setting,
         Min = findViewById(R.id.text);
     }
 
-    public void SwitchingInterface(){
+    public void SwitchingInterface(){ //Метод для остановки и воспроизведения аудиозаписи
         if(MainActivity.mediaPlayer.isPlaying()) {
             MainActivity.mediaPlayer.pause();
             PlayStop.setImageResource(R.drawable.play);
@@ -274,12 +267,12 @@ public class Player_Fragment extends AppCompatActivity implements Color_Setting,
         }
     }
 
-    public void NextSong(){
+    public void NextSong(){  //Метод для переключения на следующую аудиозапись
         position = ((position+1)>AudioList.size()-1)?(0):(position+1);
         Switching(position);
     }
 
-    public void BackSong(){
+    public void BackSong(){ //Метод для переключения на прошлую аудиозапись
         position = ((position-1)<0)?(AudioList.size()-1):(position-1);
         Switching(position);
     }
@@ -310,9 +303,11 @@ public class Player_Fragment extends AppCompatActivity implements Color_Setting,
 
         MainActivity.mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
-            public void onCompletion(MediaPlayer mp) {
+            public void onCompletion(MediaPlayer mp) { //Метод, которые вызывается при окончании прослушивания аудиозаписи
                 Log.e(TAG, "onComplete hit");
                 mp.reset();
+                Slider.setValue(0);
+                Slider.setValueTo(1);
                 NextSong();
             }
         });
@@ -320,7 +315,7 @@ public class Player_Fragment extends AppCompatActivity implements Color_Setting,
     }
 
 
-    public String createTimeLabel(int time){ //Метод создания нового TextView для пользователя при прослушивании и переключении аудиозаписи
+    public String createTimeLabel(int time){ //Метод создания нового TextView для пользователя при прослушивании и перемотки аудиозаписи
         String timeLabel;
         int min = time/1000/60;
         int sec = time/1000 % 60;
@@ -330,7 +325,7 @@ public class Player_Fragment extends AppCompatActivity implements Color_Setting,
         return  timeLabel;
     }
 
-    private ArrayList<Audio> AddMusicFavorite(){
+    private ArrayList<Audio> AddMusicFavorite(){ //Метод добавления аудиозаписи в плейлист избранных аудиозаписей
         String path = AudioList.get(position).getPath();
         String title = AudioList.get(position).getTitle();
         String artist = AudioList.get(position).getArtist();
@@ -339,7 +334,7 @@ public class Player_Fragment extends AppCompatActivity implements Color_Setting,
         return Favorite;
     }
 
-    public void IsFavourite(){
+    public void IsFavourite(){ // Метод проверяющий добавлена ли песня в плейлист избранных
         try {
             FileInputStream fis = new FileInputStream(this.getFilesDir().getPath() + "/Favorite.text");
             ObjectInputStream ois = new ObjectInputStream(fis);
@@ -355,7 +350,7 @@ public class Player_Fragment extends AppCompatActivity implements Color_Setting,
         }
     }
 
-    public void FileOutput(){
+    public void FileOutput(){ //Метод для сохранения плейлиста избранных аудиозаписей в файл
         try {
             FileOutputStream fos = new FileOutputStream(getApplicationContext().getFilesDir().getPath() + "/Favorite.text");
             ObjectOutputStream oos = new ObjectOutputStream(fos);
@@ -383,7 +378,7 @@ public class Player_Fragment extends AppCompatActivity implements Color_Setting,
     public void onLongPress(MotionEvent e) { }
 
     @Override
-    public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+    public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) { //Метод, обрабатывающий скроллинг по экрану
         float diffY = e2.getY() - e1.getY();
         float diffX = e2.getX() - e1.getX();
         if(Math.abs(diffX) > Math.abs(diffY)){
@@ -406,7 +401,7 @@ public class Player_Fragment extends AppCompatActivity implements Color_Setting,
     }
 
     @Override
-    public boolean onDoubleTap(MotionEvent e) {
+    public boolean onDoubleTap(MotionEvent e) { //Метод, обрабатывающий двойное нажатие на экран
         SwitchingInterface();
         return false;
     }
@@ -417,12 +412,12 @@ public class Player_Fragment extends AppCompatActivity implements Color_Setting,
     }
 
     @Override
-    public boolean onTouchEvent(MotionEvent event) {
+    public boolean onTouchEvent(MotionEvent event) { //Метод определяющий событие нажатия на экран
         gestureDetectorCompat.onTouchEvent(event);
         return super.onTouchEvent(event);
     }
 
-    public void Colors(SharedPreferences sharedPreferences) { //Метод смены цвета приложения
+    public void Colors(SharedPreferences sharedPreferences) { //Метод смены цвета
         String Additionally_color = sharedPreferences.getString("Additionally Color", "Green");
         if (Additionally_color.equals("Orange")) {
             Slider.setTrackActiveTintList(ColorStateList.valueOf((ContextCompat.getColor(getApplicationContext(), R.color.orange))));
@@ -458,5 +453,4 @@ public class Player_Fragment extends AppCompatActivity implements Color_Setting,
             Back.setBackgroundColor((ContextCompat.getColor(getApplicationContext(), R.color.green)));
         }
     }
-
 }
