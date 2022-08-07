@@ -39,7 +39,6 @@ public class Choose_Fragment extends Fragment implements OnAudioSelectedListener
             public void onClick(View v) { //Метод для перехода в меню настроек
                 Intent intent = new Intent(getActivity().getBaseContext(), SettingActivity.class);
                 startActivity(intent);
-
             }
         });
         try {

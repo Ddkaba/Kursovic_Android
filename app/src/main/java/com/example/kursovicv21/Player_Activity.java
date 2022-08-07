@@ -31,13 +31,15 @@ import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Player_Activity extends AppCompatActivity implements Color_Setting, TimePickerDialog.OnTimeSetListener, GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener {
     private static final String TAG = "MyActivity";
     public static final int SWIPE = 100;
+
     private GestureDetectorCompat gestureDetectorCompat;
     ImageButton favourite, PlayStop, Next, Back, Player_Setting, Playlist, Timer;
-    ArrayList<Audio> Favorite = new ArrayList<>();
+    List<Audio> Favorite = new ArrayList<>();
     TextView Max, Min, NameSong, Author, Speed;
     CardView BottomCardView, TopCardView;
     SharedPreferences sharedPreferences;
@@ -325,7 +327,7 @@ public class Player_Activity extends AppCompatActivity implements Color_Setting,
         return  timeLabel;
     }
 
-    private ArrayList<Audio> AddMusicFavorite(){ //Метод добавления аудиозаписи в плейлист избранных аудиозаписей
+    private List<Audio> AddMusicFavorite(){ //Метод добавления аудиозаписи в плейлист избранных аудиозаписей
         String path = AudioList.get(position).getPath();
         String title = AudioList.get(position).getTitle();
         String artist = AudioList.get(position).getArtist();
